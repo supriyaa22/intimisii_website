@@ -1,20 +1,6 @@
 
 import { Link } from "react-router-dom";
-
-interface Badge {
-  label: string;
-  variant: "eco" | "luxury" | "feature";
-}
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  description: string;
-  details: string;
-  badges: Badge[];
-}
+import { Product, Badge } from "../types";
 
 interface ProductCardProps {
   product: Product;

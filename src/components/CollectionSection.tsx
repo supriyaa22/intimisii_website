@@ -1,9 +1,10 @@
 
 import { Link } from "react-router-dom";
 import ProductCard from "./ProductCard";
+import { Product, BadgeVariant } from "../types";
 
 const CollectionSection = () => {
-  const products = [
+  const products: Product[] = [
     {
       id: 1,
       name: "Adiva Amorè Signature Collection",
@@ -12,11 +13,11 @@ const CollectionSection = () => {
       description: "Intimisii's opulent parfum candle, meticulously crafted by our perfumer whose expertise was cultivated in Grasse, France.",
       details: "Intricately composed using coconut wax and an exquisite fusion of fragrance and essential oils. Free from parabens, paraffin, phthalates, sulfates, synthetic dyes, and formaldehyde.",
       badges: [
-        { label: "Eco Conscious", variant: "eco" },
-        { label: "Cruelty Free", variant: "feature" },
-        { label: "Luxurious", variant: "luxury" },
-        { label: "Long - Lasting", variant: "feature" },
-        { label: "Eco - Friendly", variant: "eco" },
+        { label: "Eco Conscious", variant: "eco" as BadgeVariant },
+        { label: "Cruelty Free", variant: "feature" as BadgeVariant },
+        { label: "Luxurious", variant: "luxury" as BadgeVariant },
+        { label: "Long - Lasting", variant: "feature" as BadgeVariant },
+        { label: "Eco - Friendly", variant: "eco" as BadgeVariant },
       ]
     },
     {
@@ -27,11 +28,11 @@ const CollectionSection = () => {
       description: "A testament to the artistry of fragrance, offering an olfactory masterpiece characterized by unrivaled diffusion of scent.",
       details: "Harness the potent essences of coconut wax with intricately blended perfume fragrances and essential oils. Our sustainable packaging materials resonate with eco-conscious values.",
       badges: [
-        { label: "Eco Conscious", variant: "eco" },
-        { label: "Cruelty Free", variant: "feature" },
-        { label: "Sophisticated", variant: "luxury" },
-        { label: "Rich", variant: "luxury" },
-        { label: "Eco - Friendly", variant: "eco" },
+        { label: "Eco Conscious", variant: "eco" as BadgeVariant },
+        { label: "Cruelty Free", variant: "feature" as BadgeVariant },
+        { label: "Sophisticated", variant: "luxury" as BadgeVariant },
+        { label: "Rich", variant: "luxury" as BadgeVariant },
+        { label: "Eco - Friendly", variant: "eco" as BadgeVariant },
       ]
     },
     {
@@ -42,12 +43,12 @@ const CollectionSection = () => {
       description: "A passionate ode to the art of indulgence, crafting a sensory journey of pure, unadulterated luxury.",
       details: "When the luscious warm wax gently cascades onto your skin, it infuses your space with an intoxicating essence of romance and allure.",
       badges: [
-        { label: "Sensual", variant: "feature" },
-        { label: "Therapeutic", variant: "feature" },
-        { label: "Luxurious", variant: "luxury" },
-        { label: "Aromatic", variant: "feature" },
-        { label: "Eco - Friendly", variant: "eco" },
-        { label: "Massage Candle", variant: "feature" },
+        { label: "Sensual", variant: "feature" as BadgeVariant },
+        { label: "Therapeutic", variant: "feature" as BadgeVariant },
+        { label: "Luxurious", variant: "luxury" as BadgeVariant },
+        { label: "Aromatic", variant: "feature" as BadgeVariant },
+        { label: "Eco - Friendly", variant: "eco" as BadgeVariant },
+        { label: "Massage Candle", variant: "feature" as BadgeVariant },
       ]
     }
   ];
