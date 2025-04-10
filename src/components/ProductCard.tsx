@@ -1,51 +1,57 @@
 
-import { Link } from "react-router-dom";
 import { Product, Badge } from "../types";
 
 interface ProductCardProps {
   product: Product;
-  reverse?: boolean;
 }
 
-const ProductCard = ({ product, reverse = false }: ProductCardProps) => {
+const ProductCard = ({ product }: ProductCardProps) => {
   const getBadgeClass = (variant: string) => {
     switch (variant) {
       case "eco":
-        return "eco-badge";
+        return "bg-transparent text-green-500 border border-green-700 hover:bg-green-900/20";
       case "luxury":
-        return "luxury-badge";
+        return "bg-transparent text-gold border border-gold hover:bg-gold/10";
       default:
-        return "feature-badge";
+        return "bg-transparent text-white border border-stone-700 hover:bg-stone-800/30";
     }
   };
 
   return (
-    <div className={`grid grid-cols-1 lg:grid-cols-2 gap-8 ${reverse ? 'lg:flex-row-reverse' : ''}`}>
-      <div className="aspect-square">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 w-full">
+      {/* Product Image */}
+      <div className="aspect-square bg-stone-900">
         <img
           src={product.image}
           alt={product.name}
           className="w-full h-full object-cover"
         />
       </div>
-      <div className="border border-gold p-8 flex flex-col justify-between">
+      
+      {/* Product Details */}
+      <div className="bg-black/30 border border-gold/40 p-8 flex flex-col justify-between">
         <div>
-          <h3 className="font-serif text-2xl mb-2">{product.name}</h3>
-          <p className="text-xl mb-6">${product.price}</p>
+          <h3 className="font-serif text-2xl">
+            <span className="text-gold">{product.name.split(' ')[0]} {product.name.split(' ')[1]}</span> {product.name.split(' ').slice(2).join(' ')}
+          </h3>
+          <p className="text-2xl mb-6">${product.price}</p>
+          
           <p className="text-gray-300 mb-4">{product.description}</p>
           <p className="text-gray-400 text-sm mb-8">{product.details}</p>
-          <div className="flex flex-wrap gap-2">
-            {product.badges.map((badge, index) => (
+          
+          <div className="flex flex-wrap gap-2 mb-10">
+            {product.badges.slice(0, 5).map((badge, index) => (
               <span 
                 key={index} 
-                className={`product-badge ${getBadgeClass(badge.variant)}`}
+                className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors ${getBadgeClass(badge.variant)}`}
               >
                 {badge.label}
               </span>
             ))}
           </div>
         </div>
-        <button className="cart-button">
+        
+        <button className="w-full bg-transparent hover:bg-stone-800/50 transition duration-300 border border-gold/60 py-4 text-white font-medium">
           Add to Cart
         </button>
       </div>

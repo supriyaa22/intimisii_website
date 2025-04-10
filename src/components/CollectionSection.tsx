@@ -2,6 +2,7 @@
 import { Link } from "react-router-dom";
 import ProductCard from "./ProductCard";
 import { Product, BadgeVariant } from "../types";
+import { Separator } from "./ui/separator";
 
 const CollectionSection = () => {
   const products: Product[] = [
@@ -9,7 +10,7 @@ const CollectionSection = () => {
       id: 1,
       name: "Adiva Amorè Signature Collection",
       price: 199,
-      image: "/lovable-uploads/d9c49793-5d4b-493f-a809-0923cc292c64.png",
+      image: "/lovable-uploads/15b113ac-1c6d-4ed3-9138-f397ecde98a4.png",
       description: "Intimisii's opulent parfum candle, meticulously crafted by our perfumer whose expertise was cultivated in Grasse, France.",
       details: "Intricately composed using coconut wax and an exquisite fusion of fragrance and essential oils. Free from parabens, paraffin, phthalates, sulfates, synthetic dyes, and formaldehyde.",
       badges: [
@@ -56,23 +57,29 @@ const CollectionSection = () => {
   return (
     <section className="bg-darkbg py-20">
       <div className="container mx-auto px-4">
-        {/* Gold line separator */}
-        <div className="w-full max-w-4xl mx-auto border-t border-gold mb-16"></div>
-        
+        {/* Header section with gold separator */}
         <div className="text-center mb-16">
           <p className="text-sm uppercase tracking-wider text-gray-400">OUR COLLECTION</p>
           <h2 className="text-5xl font-serif mt-2">
             Artisanal <span className="text-gold">Fragrances</span>
           </h2>
-          <p className="text-gray-300 mt-6 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-gray-300 mt-6 max-w-2xl mx-auto">
             Each Intimisii candle is meticulously handcrafted using the finest sustainable ingredients, 
             creating an exquisite sensory experience that transcends the ordinary.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+        {/* Product Display */}
+        <div className="grid grid-cols-1 gap-16">
           {products.map((product, index) => (
-            <ProductCard key={product.id} product={product} reverse={index % 2 !== 0} />
+            <div key={product.id} className="flex flex-col lg:flex-row gap-0">
+              <ProductCard product={product} />
+              {index < products.length - 1 && (
+                <div className="w-full my-16">
+                  <Separator className="bg-gold/20" />
+                </div>
+              )}
+            </div>
           ))}
         </div>
       </div>
