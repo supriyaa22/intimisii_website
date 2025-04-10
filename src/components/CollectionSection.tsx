@@ -56,10 +56,15 @@ const CollectionSection = () => {
   return (
     <section className="bg-darkbg py-20">
       <div className="container mx-auto px-4">
+        {/* Gold line separator */}
+        <div className="w-full max-w-4xl mx-auto border-t border-gold mb-16"></div>
+        
         <div className="text-center mb-16">
           <p className="text-sm uppercase tracking-wider text-gray-400">OUR COLLECTION</p>
-          <h2 className="text-5xl font-serif mt-2">Artisanal <span className="text-gold">Fragrances</span></h2>
-          <p className="text-gray-300 mt-6 max-w-3xl mx-auto">
+          <h2 className="text-5xl font-serif mt-2">
+            Artisanal <span className="text-gold">Fragrances</span>
+          </h2>
+          <p className="text-gray-300 mt-6 max-w-2xl mx-auto leading-relaxed">
             Each Intimisii candle is meticulously handcrafted using the finest sustainable ingredients, 
             creating an exquisite sensory experience that transcends the ordinary.
           </p>
