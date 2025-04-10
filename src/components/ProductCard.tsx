@@ -18,9 +18,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 w-full">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
       {/* Product Image */}
-      <div className="aspect-square bg-stone-900">
+      <div className="aspect-auto bg-stone-950 overflow-hidden">
         <img
           src={product.image}
           alt={product.name}
@@ -29,15 +29,15 @@ const ProductCard = ({ product }: ProductCardProps) => {
       </div>
       
       {/* Product Details */}
-      <div className="bg-black/30 border border-gold/40 p-8 flex flex-col justify-between">
+      <div className="bg-black border border-gold/30 p-12 flex flex-col justify-between">
         <div>
-          <h3 className="font-serif text-2xl">
+          <h3 className="font-serif text-3xl mb-2">
             <span className="text-gold">{product.name.split(' ')[0]} {product.name.split(' ')[1]}</span> {product.name.split(' ').slice(2).join(' ')}
           </h3>
           <p className="text-2xl mb-6">${product.price}</p>
           
-          <p className="text-gray-300 mb-4">{product.description}</p>
-          <p className="text-gray-400 text-sm mb-8">{product.details}</p>
+          <p className="text-gray-300 mb-6">{product.description}</p>
+          <p className="text-gray-400 mb-12">{product.details}</p>
           
           <div className="flex flex-wrap gap-2 mb-10">
             {product.badges.slice(0, 5).map((badge, index) => (

@@ -10,7 +10,7 @@ const CollectionSection = () => {
       id: 1,
       name: "Adiva Amorè Signature Collection",
       price: 199,
-      image: "/lovable-uploads/15b113ac-1c6d-4ed3-9138-f397ecde98a4.png",
+      image: "/lovable-uploads/89b82b09-3945-4098-9959-a6d6273bcc14.png",
       description: "Intimisii's opulent parfum candle, meticulously crafted by our perfumer whose expertise was cultivated in Grasse, France.",
       details: "Intricately composed using coconut wax and an exquisite fusion of fragrance and essential oils. Free from parabens, paraffin, phthalates, sulfates, synthetic dyes, and formaldehyde.",
       badges: [
@@ -57,7 +57,7 @@ const CollectionSection = () => {
   return (
     <section className="bg-darkbg py-20">
       <div className="container mx-auto px-4">
-        {/* Header section with gold separator */}
+        {/* Header section */}
         <div className="text-center mb-16">
           <p className="text-sm uppercase tracking-wider text-gray-400">OUR COLLECTION</p>
           <h2 className="text-5xl font-serif mt-2">
@@ -70,9 +70,9 @@ const CollectionSection = () => {
         </div>
 
         {/* Product Display */}
-        <div className="grid grid-cols-1 gap-16">
+        <div className="space-y-16">
           {products.map((product, index) => (
-            <div key={product.id} className="flex flex-col lg:flex-row gap-0">
+            <div key={product.id}>
               <ProductCard product={product} />
               {index < products.length - 1 && (
                 <div className="w-full my-16">
