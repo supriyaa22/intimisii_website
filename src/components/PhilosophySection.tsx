@@ -5,7 +5,7 @@ const PhilosophySection = () => {
   return (
     <section className="bg-darkbg py-20">
       <div className="container mx-auto px-4">
-        <div className="border-t border-stone-800 pt-16"></div>
+        <div className="border-t border-stone-700 pt-16"></div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <p className="text-sm uppercase tracking-wider text-gray-400">OUR PHILOSOPHY</p>
@@ -25,10 +25,10 @@ const PhilosophySection = () => {
               mindful indulgence that whispers rather than shouts, leaving an indelible
               impression on the senses.
             </p>
-            <div>
+            <div className="mt-10">
               <Link 
                 to="/our-story"
-                className="inline-block px-8 py-3 border border-stone-700 hover:border-gold text-white hover:text-gold transition duration-200"
+                className="inline-block px-8 py-3 bg-transparent border border-stone-700 hover:border-gold text-white hover:text-gold transition duration-200"
               >
                 Discover Our Story
               </Link>
@@ -36,13 +36,13 @@ const PhilosophySection = () => {
           </div>
           <div className="border border-gold p-1">
             <img 
-              src="/lovable-uploads/a15e7bef-a47b-401a-a895-2ea5a371ac46.png" 
-              alt="Luxury Candle" 
+              src="/lovable-uploads/21c99c58-6f25-466b-88de-1cda5de68678.png" 
+              alt="Square glass candle with multiple wicks" 
               className="w-full h-auto"
             />
           </div>
         </div>
-        <div className="border-b border-stone-800 pb-16 mt-16"></div>
+        <div className="border-b border-stone-700 pb-16 mt-16"></div>
       </div>
     </section>
   );
