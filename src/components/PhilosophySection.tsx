@@ -36,7 +36,7 @@ const PhilosophySection = () => {
           </div>
           <div className="border border-gold">
             <img 
-              src="/lovable-uploads/76ebf700-1615-4a76-9421-09977ace05f1.png" 
+              src="/lovable-uploads/d9d814d3-17a5-4ce0-9138-eac6c7524535.png" 
               alt="Square glass candle with multiple wicks" 
               className="w-full h-auto"
             />
