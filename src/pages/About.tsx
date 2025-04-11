@@ -1,64 +1,69 @@
 
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
+import React from 'react';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 const About = () => {
   return (
-    <div className="min-h-screen bg-darkbg">
+    <div className="min-h-screen bg-black text-white">
       <Navbar />
       
-      {/* Hero Section with proper spacing from image */}
-      <section className="relative bg-darkbg pt-16 pb-12">
-        <div className="container mx-auto px-4 text-center">
-          <h3 className="text-xl text-white mb-2">Our Story</h3>
-          <h1 className="text-6xl md:text-7xl font-serif mb-4">
-            ABOUT <span className="text-gold">INTIMISII</span>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+        {/* Header Section */}
+        <div className="text-center mb-16 md:mb-24">
+          <h2 className="text-xl md:text-2xl font-montserrat mb-6">Our Story</h2>
+          <h1 className="text-4xl md:text-6xl mb-8 font-playfair">
+            <span className="text-white">ABOUT</span>{" "}
+            <span className="text-[#C9A96E]">INTIMISII</span>
           </h1>
-          <p className="text-lg text-gray-300 max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl font-montserrat max-w-3xl mx-auto">
             Discover the passion and artistry behind our luxury candle collection.
           </p>
         </div>
-      </section>
-      
-      {/* Philosophy Section with proper spacing from image */}
-      <section className="bg-darkbg py-12">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col">
-            <h2 className="text-5xl md:text-6xl font-serif mb-8">
-              Our <span className="text-gold">Philosophy</span>
+        
+        {/* Philosophy Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16">
+          <div className="flex flex-col justify-center">
+            <h2 className="text-4xl md:text-5xl font-playfair mb-10">
+              <span className="text-white">Our</span>{" "}
+              <span className="text-[#C9A96E]">Philosophy</span>
             </h2>
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-              <div className="space-y-8">
-                <p className="text-gray-300 leading-relaxed text-lg">
-                  At Intimisii, we believe in creating more than just candles—
-                  we craft sensory journeys that transform spaces and elevate moments. Each
-                  product embodies our commitment to artisanal craftsmanship,
-                  sustainable practices, and uncompromising quality.
-                </p>
-                <p className="text-gray-300 leading-relaxed text-lg">
-                  Our founder's vision was to create a brand that epitomizes luxury while
-                  respecting our planet. This ethos continues to guide every decision we make,
-                  from sourcing ingredients to designing our packaging.
-                </p>
-                <p className="text-gray-300 leading-relaxed text-lg">
-                  We take pride in our attention to detail and dedication to excellence,
-                  ensuring that every Intimisii candle delivers an exceptional experience
-                  that engages all senses and creates lasting memories.
-                </p>
-              </div>
-              <div className="border border-gold">
+            <div className="space-y-8 font-montserrat text-lg">
+              <p>
+                At Intimisii, we believe in creating more than just candles 
+                we craft sensory journeys that transform spaces and elevate moments. Each 
+                product embodies our commitment to artisanal craftsmanship, 
+                sustainable practices, and uncompromising quality.
+              </p>
+              
+              <p>
+                Our founder's vision was to create a brand that epitomizes luxury while 
+                respecting our planet. This ethos continues to guide every decision we make, 
+                from sourcing ingredients to designing our packaging.
+              </p>
+              
+              <p>
+                We take pride in our attention to detail and dedication to excellence, 
+                ensuring that every Intimisii candle delivers an exceptional experience 
+                that engages all senses and creates lasting memories.
+              </p>
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-center">
+            <div className="border border-[#C9A96E] p-4">
+              <div className="bg-black p-3">
                 <img 
-                  src="/lovable-uploads/8b1d83ba-917e-41c2-9bee-71943c189068.png" 
-                  alt="Intimisii luxury candle with multiple wicks on burgundy velvet" 
+                  src="/lovable-uploads/430e23bb-c28f-40c1-aa54-c3b6aa2b1394.png" 
+                  alt="Intimisii Luxury Candle" 
                   className="w-full h-auto"
                 />
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </main>
       
       <Footer />
     </div>
