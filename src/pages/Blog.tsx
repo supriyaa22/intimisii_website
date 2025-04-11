@@ -86,7 +86,7 @@ const Blog = () => {
             />
             
             <LuxuryBlogPost 
-              image="/lovable-uploads/cbf9ff85-cacb-4d10-91dd-fb6027b8af7a.png" 
+              image="/lovable-uploads/66492098-243a-49ee-8c83-036c1984bdd7.png" 
               title="Creating a Sensory Sanctuary: Transform Your Space into a Haven of Tranquility" 
               description="Learn how to curate a personal oasis through strategic fragrance placement, ambient lighting, and mindful design choices."
               titleHighlight="a Sensory Sanctuary"
