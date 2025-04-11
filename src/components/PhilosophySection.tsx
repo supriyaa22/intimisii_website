@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 
 const PhilosophySection = () => {
   return (
-    <section className="bg-darkbg py-20">
+    <section className="bg-darkbg py-16">
       <div className="container mx-auto px-4">
-        <div className="border-t border-stone-700 pt-16"></div>
+        <div className="border-t border-stone-700 pt-12"></div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
+          <div className="space-y-5">
             <p className="text-sm uppercase tracking-wider text-gray-400">OUR PHILOSOPHY</p>
-            <h2 className="text-5xl font-serif">
+            <h2 className="text-4xl md:text-5xl font-serif">
               A Symphony of{" "}
               <span className="text-gold">Elegance & Refinement</span>
             </h2>
@@ -25,7 +25,7 @@ const PhilosophySection = () => {
               mindful indulgence that whispers rather than shouts, leaving an indelible
               impression on the senses.
             </p>
-            <div className="mt-10">
+            <div className="mt-8">
               <Link 
                 to="/about"
                 className="inline-block px-8 py-3 bg-transparent border border-stone-700 hover:border-gold text-white hover:text-gold transition duration-200"
@@ -42,7 +42,7 @@ const PhilosophySection = () => {
             />
           </div>
         </div>
-        <div className="border-b border-stone-700 pb-16 mt-16"></div>
+        <div className="border-b border-stone-700 pb-12 mt-12"></div>
       </div>
     </section>
   );
