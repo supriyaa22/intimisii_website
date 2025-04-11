@@ -27,7 +27,7 @@ const PhilosophySection = () => {
             </p>
             <div className="mt-10">
               <Link 
-                to="/our-story"
+                to="/about"
                 className="inline-block px-8 py-3 bg-transparent border border-stone-700 hover:border-gold text-white hover:text-gold transition duration-200"
               >
                 Discover Our Story
