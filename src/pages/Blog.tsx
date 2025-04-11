@@ -97,7 +97,7 @@ const Blog = () => {
             />
             
             <LuxuryBlogPost 
-              image="/lovable-uploads/c542f3bd-ce76-4883-9cd5-6e7c38a56d13.png" 
+              image="/lovable-uploads/15969d41-8cc6-44c6-8d18-34d458c000e2.png" 
               title="The Language of Scent" 
               description="Explore how different fragrances communicate emotions and memories, creating a personal olfactory language unique to you."
               titleHighlight="Language of Scent"
