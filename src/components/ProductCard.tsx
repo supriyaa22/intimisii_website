@@ -4,9 +4,10 @@ import { Product, Badge } from "../types";
 interface ProductCardProps {
   product: Product;
   imageOnRight?: boolean;
+  isFeatured?: boolean;
 }
 
-const ProductCard = ({ product, imageOnRight = false }: ProductCardProps) => {
+const ProductCard = ({ product, imageOnRight = false, isFeatured = false }: ProductCardProps) => {
   const getBadgeClass = (variant: string) => {
     switch (variant) {
       case "eco":
@@ -19,18 +20,25 @@ const ProductCard = ({ product, imageOnRight = false }: ProductCardProps) => {
   };
 
   const contentSection = (
-    <div className="bg-black border border-gold/30 p-12 flex flex-col justify-between">
+    <div className={`bg-black ${isFeatured ? 'border border-gold' : 'border border-gold/30'} p-12 flex flex-col justify-between`}>
       <div>
-        <h3 className="font-serif text-3xl mb-4">
-          <span className="text-gold">{product.name.split(' ')[0]} {product.name.split(' ')[1]}</span> {product.name.split(' ').slice(2).join(' ')}
-        </h3>
+        {isFeatured ? (
+          <h3 className="font-serif text-3xl mb-4">
+            <span className="text-gold">Adiva Signature Bougié</span> Massage Spa Candle
+          </h3>
+        ) : (
+          <h3 className="font-serif text-3xl mb-4">
+            <span className="text-gold">{product.name.split(' ')[0]} {product.name.split(' ')[1]}</span> {product.name.split(' ').slice(2).join(' ')}
+          </h3>
+        )}
+        
         <p className="text-2xl mb-8">${product.price}</p>
         
         <p className="text-gray-300 mb-8">{product.description}</p>
         <p className="text-gray-400 mb-12">{product.details}</p>
         
         <div className="flex flex-wrap gap-3 mb-12">
-          {product.badges.slice(0, 5).map((badge, index) => (
+          {product.badges.slice(0, 6).map((badge, index) => (
             <span 
               key={index} 
               className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors ${getBadgeClass(badge.variant)}`}
@@ -41,7 +49,11 @@ const ProductCard = ({ product, imageOnRight = false }: ProductCardProps) => {
         </div>
       </div>
       
-      <button className="w-full bg-transparent hover:bg-gold/20 transition-all duration-300 border border-gold text-white font-medium py-4 hover:border-gold/80">
+      <button className={`w-full transition-all duration-300 text-white font-medium py-4 
+        ${isFeatured 
+          ? 'bg-stone-900 hover:bg-stone-800 text-white' 
+          : 'bg-transparent hover:bg-gold/20 border border-gold hover:border-gold/80'}`
+      }>
         Add to Cart
       </button>
     </div>

@@ -40,7 +40,7 @@ const CollectionSection = () => {
       id: 3,
       name: "Adiva Signature Bougié Massage Spa Candle",
       price: 79,
-      image: "/lovable-uploads/498b3b88-05d5-4cf3-8142-5edb821bcfc0.png",
+      image: "/lovable-uploads/03a09354-2d92-4c65-b77e-2c2bc5433874.png",
       description: "A passionate ode to the art of indulgence, crafting a sensory journey of pure, unadulterated luxury.",
       details: "When the luscious warm wax gently cascades onto your skin, it infuses your space with an intoxicating essence of romance and allure.",
       badges: [
@@ -76,6 +76,7 @@ const CollectionSection = () => {
               <ProductCard 
                 product={product} 
                 imageOnRight={index % 2 !== 0} // alternate layout
+                isFeatured={index === 2} // Mark the third product as featured
               />
               {index < products.length - 1 && (
                 <div className="w-full my-16">
