@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useIsMobile } from "../hooks/use-mobile";
@@ -32,7 +33,7 @@ const Navbar = () => {
         <div className="flex justify-between items-center">
           <Link to="/" className="z-10">
             <img
-              src="/lovable-uploads/cff2b946-86c8-4495-8d0f-1b24df9821aa.png"
+              src="/lovable-uploads/d3b80508-b477-4405-b3eb-da75ceeb4f59.png"
               alt="Intimisii Logo"
               className="h-10 md:h-12"
             />
