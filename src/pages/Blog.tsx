@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -101,6 +102,26 @@ const Blog = () => {
               description="Explore how different fragrances communicate emotions and memories, creating a personal olfactory language unique to you."
               titleHighlight="Language of Scent"
               slug="the-language-of-scent"
+              isReversed={false}
+            />
+            
+            {/* New blog post: Sustainable Luxury */}
+            <LuxuryBlogPost 
+              image="/lovable-uploads/da64059e-2e78-4f88-99b8-2b50d32df815.png" 
+              title="Sustainable Luxury: The Future of Home Fragrance" 
+              description="Discover the secrets to properly burning your luxury candles to maximise their lifespan and fragrance diffusion."
+              titleHighlight="Sustainable Luxury:"
+              slug="sustainable-luxury-the-future-of-home-fragrance"
+              isReversed={true}
+            />
+            
+            {/* New blog post: Intimisii Massage Spa Candles */}
+            <LuxuryBlogPost 
+              image="/lovable-uploads/e6dabc81-fbb4-46b9-b202-a69724796f87.png" 
+              title="Intimisii Massage Spa Candles: A Luxurious Fusion of Fragrance and Skincare" 
+              description="Discover the secrets to properly burning your luxury candles to maximise their lifespan and fragrance diffusion."
+              titleHighlight="Intimisii Massage Spa Candles:"
+              slug="intimisii-massage-spa-candles-fragrance-and-skincare"
               isReversed={false}
             />
           </div>
