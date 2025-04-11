@@ -94,10 +94,10 @@ const Blog = () => {
             />
             
             <LuxuryBlogPost 
-              image="/lovable-uploads/8b1d83ba-917e-41c2-9bee-71943c189068.png" 
-              title="The History and Evolution of Luxury Fragrances" 
-              description="Explore the rich heritage of perfumery from ancient civilizations to modern artisanal creations that define contemporary luxury."
-              titleHighlight="Luxury Fragrances"
+              image="/lovable-uploads/c542f3bd-ce76-4883-9cd5-6e7c38a56d13.png" 
+              title="The Language of Scent" 
+              description="Explore how different fragrances communicate emotions and memories, creating a personal olfactory language unique to you."
+              titleHighlight="Language of Scent"
               isReversed={false}
             />
           </div>
