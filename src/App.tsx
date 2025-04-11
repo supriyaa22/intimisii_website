@@ -8,6 +8,7 @@ import Blog from "./pages/Blog";
 import ArticleDetail from "./pages/ArticleDetail";
 import SensorySanctuaryArticle from "./pages/SensorySanctuaryArticle";
 import LanguageOfScentArticle from "./pages/LanguageOfScentArticle";
+import SustainableLuxuryArticle from "./pages/SustainableLuxuryArticle";
 import "./App.css";
 import { Toaster } from "./components/ui/toaster";
 
@@ -22,6 +23,7 @@ function App() {
         <Route path="/blog/:slug" element={<ArticleDetail />} />
         <Route path="/blog/creating-a-sensory-sanctuary" element={<SensorySanctuaryArticle />} />
         <Route path="/blog/the-language-of-scent" element={<LanguageOfScentArticle />} />
+        <Route path="/blog/sustainable-luxury-the-future-of-home-fragrance" element={<SustainableLuxuryArticle />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Toaster />
