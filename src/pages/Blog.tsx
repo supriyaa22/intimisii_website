@@ -96,8 +96,9 @@ const Blog = () => {
               isReversed={true}
             />
             
+            {/* UPDATED IMAGE for The Language of Scent */}
             <LuxuryBlogPost 
-              image="/lovable-uploads/15969d41-8cc6-44c6-8d18-34d458c000e2.png" 
+              image="/lovable-uploads/cdd9f755-8a6d-49d4-b604-9bd5a259eb00.png" 
               title="The Language of Scent" 
               description="Explore how different fragrances communicate emotions and memories, creating a personal olfactory language unique to you."
               titleHighlight="Language of Scent"
