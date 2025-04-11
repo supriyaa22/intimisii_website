@@ -55,7 +55,7 @@ const About = () => {
             <div className="border border-[#C9A96E] p-4">
               <div className="bg-black p-3">
                 <img 
-                  src="/lovable-uploads/430e23bb-c28f-40c1-aa54-c3b6aa2b1394.png" 
+                  src="/lovable-uploads/76ebf700-1615-4a76-9421-09977ace05f1.png" 
                   alt="Intimisii Luxury Candle" 
                   className="w-full h-auto"
                 />
