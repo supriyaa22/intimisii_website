@@ -73,7 +73,10 @@ const CollectionSection = () => {
         <div className="space-y-16">
           {products.map((product, index) => (
             <div key={product.id}>
-              <ProductCard product={product} />
+              <ProductCard 
+                product={product} 
+                imageOnRight={index % 2 !== 0} // alternate layout
+              />
               {index < products.length - 1 && (
                 <div className="w-full my-16">
                   <Separator className="bg-gold/20" />
