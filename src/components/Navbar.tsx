@@ -87,7 +87,7 @@ const Navbar = () => {
           {/* Mobile Navigation Menu */}
           {isMobile && (
             <div
-              className={`fixed inset-0 bg-black/95 flex flex-col items-center justify-center transition-opacity duration-300 ${
+              className={`fixed inset-0 bg-[#1a1416]/95 flex flex-col items-center justify-center transition-opacity duration-300 ${
                 isMenuOpen
                   ? "opacity-100 pointer-events-auto"
                   : "opacity-0 pointer-events-none"
