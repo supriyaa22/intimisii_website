@@ -5,10 +5,10 @@ import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
 
 // Custom Button Component for Blog Articles
-const ArticleButton = ({ children }: { children: React.ReactNode }) => {
+const ArticleButton = ({ to, children }: { to: string, children: React.ReactNode }) => {
   return (
     <Link 
-      to="/" 
+      to={to}
       className="inline-block px-8 py-3 border border-[#FFDEE2] text-white hover:bg-white hover:text-black transition-all duration-300 uppercase tracking-widest text-sm"
     >
       {children}
@@ -22,10 +22,11 @@ interface BlogPostProps {
   title: string;
   titleHighlight: string;
   description: string;
+  slug: string;
   isReversed?: boolean;
 }
 
-const LuxuryBlogPost = ({ image, title, titleHighlight, description, isReversed = false }: BlogPostProps) => {
+const LuxuryBlogPost = ({ image, title, titleHighlight, description, slug, isReversed = false }: BlogPostProps) => {
   const titleParts = title.split(titleHighlight);
   
   return (
@@ -49,7 +50,7 @@ const LuxuryBlogPost = ({ image, title, titleHighlight, description, isReversed 
           {description}
         </p>
         
-        <ArticleButton>Read Article</ArticleButton>
+        <ArticleButton to={`/blog/${slug}`}>Read Article</ArticleButton>
       </div>
     </div>
   );
@@ -82,6 +83,7 @@ const Blog = () => {
               title="The Art Of Candle Burning" 
               description="Discover the secrets to properly burning your luxury candles to maximise their lifespan and fragrance diffusion."
               titleHighlight="Candle Burning"
+              slug="the-art-of-candle-burning"
               isReversed={false}
             />
             
@@ -90,6 +92,7 @@ const Blog = () => {
               title="Creating a Sensory Sanctuary: Transform Your Space into a Haven of Tranquility" 
               description="Learn how to curate a personal oasis through strategic fragrance placement, ambient lighting, and mindful design choices."
               titleHighlight="a Sensory Sanctuary"
+              slug="creating-a-sensory-sanctuary"
               isReversed={true}
             />
             
@@ -98,6 +101,7 @@ const Blog = () => {
               title="The Language of Scent" 
               description="Explore how different fragrances communicate emotions and memories, creating a personal olfactory language unique to you."
               titleHighlight="Language of Scent"
+              slug="the-language-of-scent"
               isReversed={false}
             />
           </div>
