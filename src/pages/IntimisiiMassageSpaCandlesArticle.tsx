@@ -47,10 +47,10 @@ const IntimisiiMassageSpaCandlesArticle = () => {
             <span className="text-white">A Luxurious Fusion of Fragrance and Skincare</span>
           </h1>
           
-          {/* Hero Image with Gold Border */}
+          {/* Hero Image with Gold Border - UPDATED IMAGE */}
           <div className="mb-12 mx-auto p-1 border border-[#C9AD7E]/70 max-w-3xl">
             <img 
-              src="/lovable-uploads/e6dabc81-fbb4-46b9-b202-a69724796f87.png"
+              src="/lovable-uploads/7aec83ae-3627-427e-a8dc-1f5afed29490.png"
               alt="Intimisii Massage Spa Candles" 
               className="w-full h-auto"
             />

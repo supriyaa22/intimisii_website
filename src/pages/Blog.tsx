@@ -115,9 +115,9 @@ const Blog = () => {
               isReversed={true}
             />
             
-            {/* New blog post: Intimisii Massage Spa Candles */}
+            {/* New blog post: Intimisii Massage Spa Candles - UPDATED IMAGE */}
             <LuxuryBlogPost 
-              image="/lovable-uploads/e6dabc81-fbb4-46b9-b202-a69724796f87.png" 
+              image="/lovable-uploads/7aec83ae-3627-427e-a8dc-1f5afed29490.png" 
               title="Intimisii Massage Spa Candles: A Luxurious Fusion of Fragrance and Skincare" 
               description="Discover the secrets to properly burning your luxury candles to maximise their lifespan and fragrance diffusion."
               titleHighlight="Intimisii Massage Spa Candles:"
