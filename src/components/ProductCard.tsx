@@ -49,11 +49,8 @@ const ProductCard = ({ product, imageOnRight = false, isFeatured = false }: Prod
         </div>
       </div>
       
-      <button className={`w-full transition-all duration-300 text-white font-medium py-4 
-        ${isFeatured 
-          ? 'bg-stone-900 hover:bg-stone-800 text-white' 
-          : 'bg-transparent hover:bg-gold/20 border border-gold hover:border-gold/80'}`
-      }>
+      <button className="w-full transition-all duration-300 text-white font-medium py-4 
+        bg-transparent border border-gold hover:bg-gold/20">
         Add to Cart
       </button>
     </div>
