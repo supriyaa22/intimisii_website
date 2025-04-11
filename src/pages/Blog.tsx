@@ -78,7 +78,7 @@ const Blog = () => {
           {/* Blog Posts */}
           <div className="space-y-32">
             <LuxuryBlogPost 
-              image="/lovable-uploads/fa60a00d-028f-4505-9cc2-84c9301a93fd.png" 
+              image="/lovable-uploads/41b4dcd0-4a0d-4d31-b3e3-feb5395ecae6.png" 
               title="The Art Of Candle Burning" 
               description="Discover the secrets to properly burning your luxury candles to maximise their lifespan and fragrance diffusion."
               titleHighlight="Candle Burning"
