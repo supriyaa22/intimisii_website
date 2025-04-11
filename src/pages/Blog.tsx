@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -105,9 +104,9 @@ const Blog = () => {
               isReversed={false}
             />
             
-            {/* New blog post: Sustainable Luxury */}
+            {/* New blog post: Sustainable Luxury - Updated image */}
             <LuxuryBlogPost 
-              image="/lovable-uploads/da64059e-2e78-4f88-99b8-2b50d32df815.png" 
+              image="/lovable-uploads/0c8d28ee-46dc-4f6b-90bd-93b597cbaeeb.png" 
               title="Sustainable Luxury: The Future of Home Fragrance" 
               description="Discover the secrets to properly burning your luxury candles to maximise their lifespan and fragrance diffusion."
               titleHighlight="Sustainable Luxury:"
