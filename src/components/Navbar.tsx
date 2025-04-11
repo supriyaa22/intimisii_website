@@ -1,42 +1,158 @@
 
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useIsMobile } from "../hooks/use-mobile";
 
 const Navbar = () => {
+  const [isAtTop, setIsAtTop] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const isMobile = useIsMobile();
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsAtTop(window.scrollY < 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
-    <header className="w-full bg-[#2A1C1D] py-3 px-8 flex items-center justify-between">
-      <div className="flex items-center">
-        <Link to="/" className="h-14">
-          <img 
-            src="/lovable-uploads/a3d3d2b3-567d-4211-81c2-d53b26ebd1b7.png" 
-            alt="Intimisii Logo" 
-            className="h-full"
-          />
-        </Link>
+    <header
+      className={`fixed w-full z-50 transition-all duration-300 ${
+        isAtTop ? "py-6" : "py-4 bg-[#1a1416]/90 backdrop-blur-sm"
+      }`}
+    >
+      <div className="container mx-auto px-4 md:px-8">
+        <div className="flex justify-between items-center">
+          <Link to="/" className="z-10">
+            <img
+              src="/lovable-uploads/d3b80508-b477-4405-b3eb-da75ceeb4f59.png"
+              alt="Intimisii Logo"
+              className="h-10 md:h-12"
+            />
+          </Link>
+
+          {/* Mobile Menu Button */}
+          {isMobile && (
+            <button
+              onClick={toggleMenu}
+              className="z-10 text-white focus:outline-none"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                {isMenuOpen ? (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                ) : (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                )}
+              </svg>
+            </button>
+          )}
+
+          {/* Desktop Navigation */}
+          {!isMobile && (
+            <nav className="flex gap-8">
+              <NavLink to="/home">Home</NavLink>
+              <NavLink to="/about">About</NavLink>
+              <NavLink to="/">Shop</NavLink>
+              <NavLink to="/blog">Blog</NavLink>
+              <NavLink to="/">Testimonials</NavLink>
+              <NavLink to="/">FAQs</NavLink>
+              <NavLink to="/">Contact</NavLink>
+            </nav>
+          )}
+
+          {/* Mobile Navigation Menu */}
+          {isMobile && (
+            <div
+              className={`fixed inset-0 bg-[#1a1416]/95 flex flex-col items-center justify-center transition-opacity duration-300 ${
+                isMenuOpen
+                  ? "opacity-100 pointer-events-auto"
+                  : "opacity-0 pointer-events-none"
+              }`}
+            >
+              <nav className="flex flex-col gap-8 items-center">
+                <MobileNavLink to="/home" onClick={toggleMenu}>
+                  Home
+                </MobileNavLink>
+                <MobileNavLink to="/about" onClick={toggleMenu}>
+                  About
+                </MobileNavLink>
+                <MobileNavLink to="/" onClick={toggleMenu}>
+                  Shop
+                </MobileNavLink>
+                <MobileNavLink to="/blog" onClick={toggleMenu}>
+                  Blog
+                </MobileNavLink>
+                <MobileNavLink to="/" onClick={toggleMenu}>
+                  Testimonials
+                </MobileNavLink>
+                <MobileNavLink to="/" onClick={toggleMenu}>
+                  FAQs
+                </MobileNavLink>
+                <MobileNavLink to="/" onClick={toggleMenu}>
+                  Contact
+                </MobileNavLink>
+              </nav>
+            </div>
+          )}
+        </div>
       </div>
-      <nav className="hidden md:flex space-x-8">
-        <Link to="/" className="text-white hover:text-[#D8A7A3] transition-colors">
-          Home
-        </Link>
-        <Link to="/about" className="text-white hover:text-[#D8A7A3] transition-colors">
-          About
-        </Link>
-        <Link to="/shop" className="text-white hover:text-[#D8A7A3] transition-colors">
-          Shop
-        </Link>
-        <Link to="/blog" className="text-white hover:text-[#D8A7A3] transition-colors">
-          Blog
-        </Link>
-        <Link to="/testimonials" className="text-white hover:text-[#D8A7A3] transition-colors">
-          Testimonials
-        </Link>
-        <Link to="/faqs" className="text-white hover:text-[#D8A7A3] transition-colors">
-          FAQs
-        </Link>
-        <Link to="/contact" className="text-white hover:text-[#D8A7A3] transition-colors">
-          Contact
-        </Link>
-      </nav>
     </header>
+  );
+};
+
+interface NavLinkProps {
+  to: string;
+  children: React.ReactNode;
+}
+
+const NavLink = ({ to, children }: NavLinkProps) => {
+  return (
+    <Link
+      to={to}
+      className="text-white hover:text-[#C9AD7E] text-sm uppercase tracking-wider transition-colors duration-300"
+    >
+      {children}
+    </Link>
+  );
+};
+
+interface MobileNavLinkProps extends NavLinkProps {
+  onClick: () => void;
+}
+
+const MobileNavLink = ({ to, children, onClick }: MobileNavLinkProps) => {
+  return (
+    <Link
+      to={to}
+      className="text-white hover:text-[#C9AD7E] text-xl uppercase tracking-wider transition-colors duration-300"
+      onClick={onClick}
+    >
+      {children}
+    </Link>
   );
 };
 
