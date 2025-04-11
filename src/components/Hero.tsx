@@ -1,7 +1,7 @@
 
 const Hero = () => {
   return (
-    <div className="w-full h-[700px] bg-[#1A1F2C] relative">
+    <div className="w-full h-[700px] bg-[#D8A7A3] relative">
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="container mx-auto h-full flex flex-col items-center justify-center">
           {/* Placeholder for future video */}

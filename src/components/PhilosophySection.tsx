@@ -34,10 +34,10 @@ const PhilosophySection = () => {
               </Link>
             </div>
           </div>
-          <div className="border border-gold p-1">
+          <div className="border border-gold">
             <img 
-              src="/lovable-uploads/5c07efc2-bc84-4554-81a4-6cffae2b9e33.png" 
-              alt="Intimisii luxury candle with multiple wicks in glass container" 
+              src="/lovable-uploads/d9d814d3-17a5-4ce0-9138-eac6c7524535.png" 
+              alt="Square glass candle with multiple wicks" 
               className="w-full h-auto"
             />
           </div>
