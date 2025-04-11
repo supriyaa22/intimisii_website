@@ -6,10 +6,10 @@ const PhilosophySection = () => {
     <section className="bg-darkbg py-16">
       <div className="container mx-auto px-4">
         <div className="border-t border-stone-700 pt-12"></div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-5">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="space-y-8">
             <p className="text-sm uppercase tracking-wider text-gray-400">OUR PHILOSOPHY</p>
-            <h2 className="text-4xl md:text-5xl font-serif">
+            <h2 className="text-5xl font-serif">
               A Symphony of{" "}
               <span className="text-gold">Elegance & Refinement</span>
             </h2>
@@ -34,7 +34,7 @@ const PhilosophySection = () => {
               </Link>
             </div>
           </div>
-          <div className="border border-gold p-1">
+          <div className="border border-gold">
             <img 
               src="/lovable-uploads/21c99c58-6f25-466b-88de-1cda5de68678.png" 
               alt="Square glass candle with multiple wicks" 
