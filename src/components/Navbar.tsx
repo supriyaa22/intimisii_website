@@ -35,7 +35,7 @@ const Navbar = () => {
             <img
               src="/lovable-uploads/d3b80508-b477-4405-b3eb-da75ceeb4f59.png"
               alt="Intimisii Logo"
-              className="h-10 md:h-12"
+              className="h-16 md:h-20" // Increased logo size
             />
           </Link>
 
