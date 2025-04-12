@@ -26,7 +26,7 @@ const Navbar = () => {
   return (
     <header
       className={`fixed w-full z-50 transition-all duration-300 ${
-        isAtTop ? "py-6" : "py-4 bg-[#1a1416]/90 backdrop-blur-sm"
+        isAtTop ? "py-6 bg-[#3A1B1F]" : "py-4 bg-[#3A1B1F]/90 backdrop-blur-sm"
       }`}
     >
       <div className="container mx-auto px-4 md:px-8">
@@ -35,7 +35,7 @@ const Navbar = () => {
             <img
               src="/lovable-uploads/d3b80508-b477-4405-b3eb-da75ceeb4f59.png"
               alt="Intimisii Logo"
-              className="h-16 md:h-20" // Increased logo size
+              className="h-10 md:h-12" // Adjusted logo size
             />
           </Link>
 
@@ -87,7 +87,7 @@ const Navbar = () => {
           {/* Mobile Navigation Menu */}
           {isMobile && (
             <div
-              className={`fixed inset-0 bg-[#1a1416]/95 flex flex-col items-center justify-center transition-opacity duration-300 ${
+              className={`fixed inset-0 bg-[#3A1B1F]/95 flex flex-col items-center justify-center transition-opacity duration-300 ${
                 isMenuOpen
                   ? "opacity-100 pointer-events-auto"
                   : "opacity-0 pointer-events-none"
