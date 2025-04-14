@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
 
 @tailwind base;
@@ -91,7 +90,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.3); /* This darkens the background image */
+    background-color: rgba(0, 0, 0, 0.4); /* This darkens the background image */
     z-index: -1;
   }
 
