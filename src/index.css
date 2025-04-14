@@ -90,7 +90,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.4); /* This darkens the background image */
+    background-color: rgba(0, 0, 0, 1); /* This completely darkens the background image */
     z-index: -1;
   }
 
