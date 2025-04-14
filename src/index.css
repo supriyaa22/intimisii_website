@@ -76,6 +76,23 @@
 
   body {
     @apply bg-darkbg text-white font-sans;
+    background-image: url('/lovable-uploads/fd530ad8-1f85-49ed-ab20-1b508ef89f31.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3); /* This darkens the background image */
+    z-index: -1;
   }
 
   h1, h2, h3, h4, h5, h6 {
