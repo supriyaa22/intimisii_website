@@ -19,10 +19,13 @@ const ProductCard = ({ product, imageOnRight = false, isFeatured = false }: Prod
     }
   };
 
+  // Special case for Adiva Amorè product
+  const isAdivaAmore = product.name.includes("Adiva Amorè");
+
   const imageSection = (
     <div className="relative aspect-auto bg-stone-950 overflow-hidden">
       <img
-        src={product.image}
+        src={isAdivaAmore ? "/lovable-uploads/a6427d45-8fd4-4357-960f-1a81aba123b6.png" : product.image}
         alt={product.name}
         className="w-full h-full object-cover"
       />
@@ -39,7 +42,29 @@ const ProductCard = ({ product, imageOnRight = false, isFeatured = false }: Prod
     </div>
   );
 
-  const contentSection = (
+  const contentSection = isAdivaAmore ? (
+    <div className="bg-black p-8 flex flex-col justify-between">
+      <div>
+        <h3 className="font-serif text-4xl mb-4 text-[#D5B36A]">Adiva Amorè</h3>
+        <p className="text-2xl mb-8 text-[#D5B36A]">$199</p>
+        
+        <div className="grid grid-cols-2 gap-4 mb-8">
+          <button className="flex items-center justify-center px-6 py-3 bg-[#3A1B1F] text-white border border-stone-700 rounded-sm hover:bg-[#4A2B2F] transition-colors">
+            Add to Cart
+          </button>
+          <button className="px-6 py-3 bg-transparent text-white border border-[#D5B36A] rounded-sm hover:bg-[#D5B36A]/10 transition-colors">
+            View Details
+          </button>
+        </div>
+        
+        <p className="text-white/80 text-justify leading-relaxed">
+          This fragrance composition is thoughtfully crafted, beginning with the uplifting
+          blend of gardenia and lemon peel, transitioning into the complex floral heart of
+          tuberose, jasmine, and green florals, and concluding with a subtle powdery base.
+        </p>
+      </div>
+    </div>
+  ) : (
     <div className="bg-black p-8 flex flex-col justify-between">
       <div>
         <h3 className="font-serif text-4xl mb-4 text-[#D5B36A]">{product.name}</h3>
