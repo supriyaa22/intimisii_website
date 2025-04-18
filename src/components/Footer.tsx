@@ -85,7 +85,6 @@ const Footer = () => {
           <div className="flex gap-6">
             <Link to="/" className="text-sm text-gray-300 hover:text-white transition-colors">Instagram</Link>
             <Link to="/" className="text-sm text-gray-300 hover:text-white transition-colors">Facebook</Link>
-            <Link to="/" className="text-sm text-gray-300 hover:text-white transition-colors">Twitter</Link>
             <Link to="/" className="text-sm text-gray-300 hover:text-white transition-colors">Snapchat</Link>
           </div>
         </div>
