@@ -7,7 +7,7 @@ const ValuesSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Sustainable Sourcing */}
-          <div className="border border-gold p-8">
+          <div className="border border-gold p-8 flex flex-col items-center justify-center text-center h-full">
             <h3 className="text-gold text-2xl md:text-3xl font-serif mb-6">
               Sustainable Sourcing
             </h3>
@@ -17,8 +17,8 @@ const ValuesSection: React.FC = () => {
             </p>
           </div>
 
-          {/* Artisinal Craftsmanship */}
-          <div className="border border-gold p-8">
+          {/* Artisanal Craftsmanship */}
+          <div className="border border-gold p-8 flex flex-col items-center justify-center text-center h-full">
             <h3 className="text-gold text-2xl md:text-3xl font-serif mb-6">
               Artisinal Craftsmanship
             </h3>
@@ -29,7 +29,7 @@ const ValuesSection: React.FC = () => {
           </div>
 
           {/* Luxury Experience */}
-          <div className="border border-gold p-8">
+          <div className="border border-gold p-8 flex flex-col items-center justify-center text-center h-full">
             <h3 className="text-gold text-2xl md:text-3xl font-serif mb-6">
               Luxury Experience
             </h3>
