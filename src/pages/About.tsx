@@ -1,8 +1,9 @@
-
 import React from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ValuesSection from '../components/ValuesSection';
+import OurCommitmentSection from "../components/OurCommitmentSection";
+import OurJourneySection from "../components/OurJourneySection";
 
 const About = () => {
   return (
@@ -69,6 +70,10 @@ const About = () => {
         
         {/* Values Section */}
         <ValuesSection />
+        
+        {/* NEW SECTIONS BELOW */}
+        <OurCommitmentSection />
+        <OurJourneySection />
       </main>
       
       <Footer />
