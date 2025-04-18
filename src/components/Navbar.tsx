@@ -35,7 +35,7 @@ const Navbar = () => {
             <img
               src="/lovable-uploads/d3b80508-b477-4405-b3eb-da75ceeb4f59.png"
               alt="Intimisii Logo"
-              className="h-12 md:h-14" // Updated logo size as requested
+              className="h-12 md:h-14"
             />
           </Link>
 
@@ -76,7 +76,7 @@ const Navbar = () => {
             <nav className="flex gap-8">
               <NavLink to="/home">Home</NavLink>
               <NavLink to="/about">About</NavLink>
-              <NavLink to="/">Shop</NavLink>
+              <NavLink to="/shop">Shop</NavLink>
               <NavLink to="/blog">Blog</NavLink>
               <NavLink to="/">Testimonials</NavLink>
               <NavLink to="/">FAQs</NavLink>
@@ -100,7 +100,7 @@ const Navbar = () => {
                 <MobileNavLink to="/about" onClick={toggleMenu}>
                   About
                 </MobileNavLink>
-                <MobileNavLink to="/" onClick={toggleMenu}>
+                <MobileNavLink to="/shop" onClick={toggleMenu}>
                   Shop
                 </MobileNavLink>
                 <MobileNavLink to="/blog" onClick={toggleMenu}>
