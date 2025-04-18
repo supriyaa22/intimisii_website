@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -12,8 +11,8 @@ const products: Product[] = [
     id: 1,
     name: "Adiva Amorè Signature Collection",
     price: 199,
-    image: "/lovable-uploads/1de72dba-2442-49d2-b545-de17ac8094c6.png",
-    description: "This fragrance composition is thoughtfully crafted, beginning with the uplifting blend of gardenia and lemon peel, transitioning into the complex floral heart of tuberose, jasmine, and green florals.",
+    image: "/lovable-uploads/b7a474ed-73df-4401-8af5-57c3226dc4e2.png",
+    description: "This fragrance composition is thoughtfully crafted, beginning with the uplifting blend of gardenia and lemon peel, transitioning into the complex floral heart of tuberose, jasmine, and green florals, and concluding with a subtle powdery base.",
     details: "Intimisii's opulent parfum candle, meticulously crafted by our perfumer whose expertise was cultivated in Grasse, France.",
     badges: [
       { label: "Signature Collection", variant: "luxury" },
