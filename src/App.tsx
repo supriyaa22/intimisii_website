@@ -13,25 +13,30 @@ import SustainableLuxuryArticle from "./pages/SustainableLuxuryArticle";
 import IntimisiiMassageSpaCandlesArticle from "./pages/IntimisiiMassageSpaCandlesArticle";
 import "./App.css";
 import { Toaster } from "./components/ui/toaster";
+import { CartProvider } from "./contexts/CartContext";
+import { Cart } from "./components/Cart";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/shop" element={<Shop />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/blog/:slug" element={<ArticleDetail />} />
-        <Route path="/blog/creating-a-sensory-sanctuary" element={<SensorySanctuaryArticle />} />
-        <Route path="/blog/the-language-of-scent" element={<LanguageOfScentArticle />} />
-        <Route path="/blog/sustainable-luxury-the-future-of-home-fragrance" element={<SustainableLuxuryArticle />} />
-        <Route path="/blog/intimisii-massage-spa-candles-fragrance-and-skincare" element={<IntimisiiMassageSpaCandlesArticle />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-      <Toaster />
-    </Router>
+    <CartProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<ArticleDetail />} />
+          <Route path="/blog/creating-a-sensory-sanctuary" element={<SensorySanctuaryArticle />} />
+          <Route path="/blog/the-language-of-scent" element={<LanguageOfScentArticle />} />
+          <Route path="/blog/sustainable-luxury-the-future-of-home-fragrance" element={<SustainableLuxuryArticle />} />
+          <Route path="/blog/intimisii-massage-spa-candles-fragrance-and-skincare" element={<IntimisiiMassageSpaCandlesArticle />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        <Cart />
+        <Toaster />
+      </Router>
+    </CartProvider>
   );
 }
 
