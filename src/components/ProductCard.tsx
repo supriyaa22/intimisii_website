@@ -1,5 +1,5 @@
-
 import { Product, Badge } from "../types";
+import { useCart } from "../contexts/CartContext";
 
 interface ProductCardProps {
   product: Product;
@@ -8,6 +8,8 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product, imageOnRight = false, isFeatured = false }: ProductCardProps) => {
+  const { addItem } = useCart();
+  
   const getBadgeClass = (variant: string) => {
     switch (variant) {
       case "eco":
@@ -49,8 +51,10 @@ const ProductCard = ({ product, imageOnRight = false, isFeatured = false }: Prod
         </div>
       </div>
       
-      <button className="w-full transition-all duration-300 text-white font-medium py-4 
-        bg-transparent border border-gold hover:bg-gold/20">
+      <button 
+        onClick={() => addItem(product)}
+        className="w-full transition-all duration-300 text-white font-medium py-4 
+          bg-transparent border border-gold hover:bg-gold/20">
         Add to Cart
       </button>
     </div>
