@@ -3,6 +3,7 @@ import { Lock, Minus, Plus, X } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "./ui/sheet";
 import { Separator } from "./ui/separator";
 import { Progress } from "./ui/progress";
+import { ScrollArea } from "./ui/scroll-area";
 import { useCart } from "../contexts/CartContext";
 
 export function Cart() {
@@ -12,7 +13,7 @@ export function Cart() {
 
   return (
     <Sheet open={isOpen} onOpenChange={closeCart}>
-      <SheetContent className="w-full sm:max-w-md bg-[#f5eee9] border-l-0">
+      <SheetContent className="w-full sm:max-w-md bg-[#f5eee9] border-l-0 flex flex-col">
         <SheetHeader className="space-y-4 mb-6">
           <div className="flex justify-between items-center">
             <SheetTitle className="text-xl font-serif text-black">SHOPPING BAG</SheetTitle>
@@ -28,7 +29,7 @@ export function Cart() {
           </div>
         </SheetHeader>
 
-        <div className="flex-1 overflow-y-auto">
+        <ScrollArea className="flex-1 -mr-4 pr-4">
           {items.map((item) => (
             <div key={item.product.id} className="mb-6">
               <div className="flex gap-4">
@@ -66,7 +67,7 @@ export function Cart() {
               <Separator className="my-6 bg-gray-300" />
             </div>
           ))}
-        </div>
+        </ScrollArea>
 
         {items.length > 0 && (
           <div className="mt-auto pt-6 border-t">
@@ -90,4 +91,3 @@ export function Cart() {
     </Sheet>
   );
 }
-
