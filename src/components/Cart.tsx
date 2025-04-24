@@ -15,13 +15,13 @@ export function Cart() {
       <SheetContent className="w-full sm:max-w-md bg-[#f5eee9] border-l-0">
         <SheetHeader className="space-y-4 mb-6">
           <div className="flex justify-between items-center">
-            <SheetTitle className="text-xl font-serif">SHOPPING BAG</SheetTitle>
+            <SheetTitle className="text-xl font-serif text-black">SHOPPING BAG</SheetTitle>
             <button onClick={closeCart} className="p-1">
-              <X className="h-5 w-5" />
+              <X className="h-5 w-5 text-black" />
             </button>
           </div>
           <div className="space-y-2">
-            <p className="text-sm">
+            <p className="text-sm text-black">
               Shop for ${FREE_SHIPPING_THRESHOLD - total > 0 ? (FREE_SHIPPING_THRESHOLD - total).toFixed(2) : '0'} to get FREE SHIPPING.
             </p>
             <Progress value={progress} className="h-2 bg-gray-200" />
@@ -38,29 +38,29 @@ export function Cart() {
                   className="h-24 w-24 object-cover rounded"
                 />
                 <div className="flex-1">
-                  <h3 className="font-serif text-lg">{item.product.name}</h3>
+                  <h3 className="font-serif text-lg text-black">{item.product.name}</h3>
                   <div className="flex items-center gap-3 mt-2">
                     <button
                       onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
                       className="p-1 border rounded-sm"
                     >
-                      <Minus className="h-3 w-3" />
+                      <Minus className="h-3 w-3 text-black" />
                     </button>
-                    <span className="text-sm">{item.quantity}</span>
+                    <span className="text-sm text-black">{item.quantity}</span>
                     <button
                       onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
                       className="p-1 border rounded-sm"
                     >
-                      <Plus className="h-3 w-3" />
+                      <Plus className="h-3 w-3 text-black" />
                     </button>
                     <button
                       onClick={() => removeItem(item.product.id)}
-                      className="text-sm underline ml-2"
+                      className="text-sm underline ml-2 text-black"
                     >
                       Remove
                     </button>
                   </div>
-                  <p className="mt-2">${item.product.price}</p>
+                  <p className="mt-2 text-black">${item.product.price}</p>
                 </div>
               </div>
               <Separator className="my-6 bg-gray-300" />
@@ -72,12 +72,12 @@ export function Cart() {
           <div className="mt-auto pt-6 border-t">
             <div className="space-y-2 mb-6">
               <div className="flex justify-between">
-                <span>You Saved:</span>
-                <span>${savings.toFixed(2)}</span>
+                <span className="text-black">You Saved:</span>
+                <span className="text-black">${savings.toFixed(2)}</span>
               </div>
               <div className="flex justify-between font-medium">
-                <span>Total:</span>
-                <span>${total.toFixed(2)}</span>
+                <span className="text-black">Total:</span>
+                <span className="text-black">${total.toFixed(2)}</span>
               </div>
             </div>
             <button className="w-full bg-[#3A1B1F] text-white py-4 flex items-center justify-center gap-2">
@@ -90,3 +90,4 @@ export function Cart() {
     </Sheet>
   );
 }
+
