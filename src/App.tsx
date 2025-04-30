@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import Blog from "./pages/Blog";
 import Shop from "./pages/Shop";
+import FAQs from "./pages/FAQs";
 import ArticleDetail from "./pages/ArticleDetail";
 import SensorySanctuaryArticle from "./pages/SensorySanctuaryArticle";
 import LanguageOfScentArticle from "./pages/LanguageOfScentArticle";
@@ -26,6 +27,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/faqs" element={<FAQs />} />
           <Route path="/blog/:slug" element={<ArticleDetail />} />
           <Route path="/blog/creating-a-sensory-sanctuary" element={<SensorySanctuaryArticle />} />
           <Route path="/blog/the-language-of-scent" element={<LanguageOfScentArticle />} />

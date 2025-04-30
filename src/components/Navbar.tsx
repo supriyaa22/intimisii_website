@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ShoppingBag } from "lucide-react";
@@ -81,7 +82,7 @@ const Navbar = () => {
               <NavLink to="/shop">Shop</NavLink>
               <NavLink to="/blog">Blog</NavLink>
               <NavLink to="/">Testimonials</NavLink>
-              <NavLink to="/">FAQs</NavLink>
+              <NavLink to="/faqs">FAQs</NavLink>
               <NavLink to="/">Contact</NavLink>
               <button onClick={toggleCart} className="text-white hover:text-[#C9AD7E] transition-colors duration-300">
                 <ShoppingBag className="h-5 w-5" />
@@ -113,7 +114,7 @@ const Navbar = () => {
                 <MobileNavLink to="/" onClick={toggleMenu}>
                   Testimonials
                 </MobileNavLink>
-                <MobileNavLink to="/" onClick={toggleMenu}>
+                <MobileNavLink to="/faqs" onClick={toggleMenu}>
                   FAQs
                 </MobileNavLink>
                 <MobileNavLink to="/" onClick={toggleMenu}>
