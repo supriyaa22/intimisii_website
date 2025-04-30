@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ShoppingBag, UserCircle } from "lucide-react";
@@ -5,10 +6,18 @@ import { useIsMobile } from "../hooks/use-mobile";
 import { useCart } from "../contexts/CartContext";
 import AuthModals from "./AuthModals";
 
+interface UserData {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+}
+
 const Navbar = () => {
   const [isAtTop, setIsAtTop] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [user, setUser] = useState<UserData | null>(null);
   const isMobile = useIsMobile();
   const { toggleCart } = useCart();
 
@@ -28,6 +37,49 @@ const Navbar = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  useEffect(() => {
+    // Check for user in localStorage
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const userData = JSON.parse(storedUser) as UserData;
+        setUser(userData);
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+      }
+    }
+
+    // Listen for login events
+    const handleUserLogin = () => {
+      const updatedUser = localStorage.getItem("user");
+      if (updatedUser) {
+        try {
+          const userData = JSON.parse(updatedUser) as UserData;
+          setUser(userData);
+        } catch (error) {
+          console.error("Error parsing user data:", error);
+        }
+      }
+    };
+
+    window.addEventListener("userLogin", handleUserLogin);
+
+    return () => {
+      window.removeEventListener("userLogin", handleUserLogin);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+  };
+
+  const UserAvatar = ({ firstName }: { firstName: string }) => (
+    <div className="flex items-center justify-center w-7 h-7 rounded-full bg-[#3A1B1F] text-white text-xs font-medium">
+      {firstName.charAt(0).toUpperCase()}
+    </div>
+  );
 
   return (
     <>
@@ -51,12 +103,29 @@ const Navbar = () => {
                 <button onClick={toggleCart} className="text-white">
                   <ShoppingBag className="h-6 w-6" />
                 </button>
-                <div 
-                  className="text-white hover:text-[#C9AD7E] transition-colors duration-300 cursor-pointer"
-                  onClick={openAuthModal}
-                >
-                  <UserCircle className="h-6 w-6" />
-                </div>
+                {user ? (
+                  <div className="relative group">
+                    <UserAvatar firstName={user.firstName} />
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg overflow-hidden z-20 hidden group-hover:block">
+                      <div className="py-2">
+                        <p className="px-4 py-2 text-sm text-gray-700">Signed in as {user.firstName}</p>
+                        <button
+                          onClick={handleLogout}
+                          className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100"
+                        >
+                          Sign out
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div 
+                    className="text-white hover:text-[#C9AD7E] transition-colors duration-300 cursor-pointer"
+                    onClick={openAuthModal}
+                  >
+                    <UserCircle className="h-6 w-6" />
+                  </div>
+                )}
                 <button onClick={toggleMenu} className="text-white focus:outline-none">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -97,12 +166,29 @@ const Navbar = () => {
                 <button onClick={toggleCart} className="text-white hover:text-[#C9AD7E] transition-colors duration-300">
                   <ShoppingBag className="h-5 w-5" />
                 </button>
-                <div 
-                  className="text-white hover:text-[#C9AD7E] transition-colors duration-300 cursor-pointer"
-                  onClick={openAuthModal}
-                >
-                  <UserCircle className="h-5 w-5" />
-                </div>
+                {user ? (
+                  <div className="relative group">
+                    <UserAvatar firstName={user.firstName} />
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg overflow-hidden z-20 hidden group-hover:block">
+                      <div className="py-2">
+                        <p className="px-4 py-2 text-sm text-gray-700">Signed in as {user.firstName}</p>
+                        <button
+                          onClick={handleLogout}
+                          className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100"
+                        >
+                          Sign out
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div 
+                    className="text-white hover:text-[#C9AD7E] transition-colors duration-300 cursor-pointer"
+                    onClick={openAuthModal}
+                  >
+                    <UserCircle className="h-5 w-5" />
+                  </div>
+                )}
               </nav>
             )}
 
