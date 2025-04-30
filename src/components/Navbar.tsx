@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ShoppingBag } from "lucide-react";
+import { ShoppingBag, UserCircle } from "lucide-react";
 import { useIsMobile } from "../hooks/use-mobile";
 import { useCart } from "../contexts/CartContext";
 
@@ -47,6 +47,9 @@ const Navbar = () => {
               <button onClick={toggleCart} className="text-white">
                 <ShoppingBag className="h-6 w-6" />
               </button>
+              <div className="text-white hover:text-[#C9AD7E] transition-colors duration-300">
+                <UserCircle className="h-6 w-6" />
+              </div>
               <button onClick={toggleMenu} className="text-white focus:outline-none">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -87,6 +90,9 @@ const Navbar = () => {
               <button onClick={toggleCart} className="text-white hover:text-[#C9AD7E] transition-colors duration-300">
                 <ShoppingBag className="h-5 w-5" />
               </button>
+              <div className="text-white hover:text-[#C9AD7E] transition-colors duration-300">
+                <UserCircle className="h-5 w-5" />
+              </div>
             </nav>
           )}
 
