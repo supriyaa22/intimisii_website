@@ -81,7 +81,7 @@ const Navbar = () => {
               <NavLink to="/about">About</NavLink>
               <NavLink to="/shop">Shop</NavLink>
               <NavLink to="/blog">Blog</NavLink>
-              <NavLink to="/">Testimonials</NavLink>
+              <NavLink to="/testimonials">Testimonials</NavLink>
               <NavLink to="/faqs">FAQs</NavLink>
               <NavLink to="/">Contact</NavLink>
               <button onClick={toggleCart} className="text-white hover:text-[#C9AD7E] transition-colors duration-300">
@@ -111,7 +111,7 @@ const Navbar = () => {
                 <MobileNavLink to="/blog" onClick={toggleMenu}>
                   Blog
                 </MobileNavLink>
-                <MobileNavLink to="/" onClick={toggleMenu}>
+                <MobileNavLink to="/testimonials" onClick={toggleMenu}>
                   Testimonials
                 </MobileNavLink>
                 <MobileNavLink to="/faqs" onClick={toggleMenu}>
