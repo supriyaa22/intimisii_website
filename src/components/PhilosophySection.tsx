@@ -36,8 +36,8 @@ const PhilosophySection = () => {
           </div>
           <div className="border border-gold p-1">
             <img 
-              src="/lovable-uploads/5c07efc2-bc84-4554-81a4-6cffae2b9e33.png" 
-              alt="Intimisii luxury candle with multiple wicks in glass container" 
+              src="/lovable-uploads/cb0c1ce0-947e-458b-ac60-94b4d2ce5dd6.png" 
+              alt="Intimisii luxury candle with white gardenia flower and lemon peel" 
               className="w-full h-auto"
             />
           </div>
