@@ -32,53 +32,43 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose, switchView }) => {
         return;
       }
       
-      // Directly query the database without using RLS for debugging
+      // Query for the specific user by email (case insensitive)
       const { data, error: queryError } = await supabase
         .from("users")
-        .select("*");
+        .select("*")
+        .eq("email", email.trim().toLowerCase())
+        .maybeSingle();
       
-      console.log("All users in database:", data);
+      console.log("User query result:", data ? "Found" : "Not found");
       
       if (queryError) {
-        console.error("Database query error:", queryError);
+        console.error("Supabase error:", queryError);
         setError("An error occurred during login");
         setIsLoading(false);
         return;
       }
       
-      // Find the user with matching email (case insensitive)
-      // Make sure this happens BEFORE checking if a user exists
-      const matchingUser = data?.find(
-        (user) => user.email.toLowerCase() === email.trim().toLowerCase()
-      );
-      
-      console.log("Matching user found:", matchingUser ? "Yes" : "No");
-      
-      // Check if any users were found
-      if (!matchingUser) {
+      // Check if user was found
+      if (!data) {
         console.log("No user found with email:", email.trim());
         setError("No account found with this email address");
         setIsLoading(false);
         return;
       }
       
-      console.log("Attempting to log in user:", matchingUser.email);
-      console.log("Found user:", { 
-        id: matchingUser.id,
-        email: matchingUser.email,
-        passwordMatch: matchingUser.password === password
-      });
+      console.log("Attempting to log in user:", data.email);
+      console.log("Password match:", data.password === password);
       
       // Compare passwords (in a real app, you'd use proper password hashing)
-      if (matchingUser.password === password) {
+      if (data.password === password) {
         console.log("Password match, login successful");
         
         // Store user session in localStorage
         localStorage.setItem("user", JSON.stringify({
-          id: matchingUser.id,
-          email: matchingUser.email,
-          firstName: matchingUser.first_name,
-          lastName: matchingUser.last_name
+          id: data.id,
+          email: data.email,
+          firstName: data.first_name,
+          lastName: data.last_name
         }));
         
         toast({
@@ -90,7 +80,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose, switchView }) => {
         window.dispatchEvent(new Event("userLogin"));
       } else {
         console.log("Password mismatch");
-        setError("Email found, but password is incorrect");
+        setError("Incorrect password");
       }
     } catch (err) {
       console.error("Login error:", err);
