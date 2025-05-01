@@ -19,7 +19,8 @@ const products: Product[] = [
     badges: [
       { label: "Signature Collection", variant: "luxury" },
       { label: "Eco Conscious", variant: "eco" }
-    ]
+    ],
+    stripeProductId: "prod_SEYvzHVuPxR6Dx"
   },
   {
     id: 2,
@@ -31,7 +32,8 @@ const products: Product[] = [
     badges: [
       { label: "Signature Collection", variant: "luxury" },
       { label: "Eco Conscious", variant: "eco" }
-    ]
+    ],
+    stripeProductId: "prod_SEYwYW2Damrmqo"
   },
   {
     id: 3,
@@ -43,7 +45,8 @@ const products: Product[] = [
     badges: [
       { label: "ADIVA Signature Bougié Massage Spa Candle", variant: "feature" },
       { label: "Eco Conscious", variant: "eco" }
-    ]
+    ],
+    stripeProductId: ""
   }
 ];
 

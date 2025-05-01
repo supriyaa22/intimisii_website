@@ -14,4 +14,5 @@ export interface Product {
   description: string;
   details: string;
   badges: Badge[];
+  stripeProductId?: string;
 }

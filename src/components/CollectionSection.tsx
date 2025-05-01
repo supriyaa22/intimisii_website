@@ -19,7 +19,8 @@ const CollectionSection = () => {
         { label: "Luxurious", variant: "luxury" as BadgeVariant },
         { label: "Long - Lasting", variant: "feature" as BadgeVariant },
         { label: "Eco - Friendly", variant: "eco" as BadgeVariant },
-      ]
+      ],
+      stripeProductId: "prod_SEYvzHVuPxR6Dx"
     },
     {
       id: 2,
@@ -34,7 +35,8 @@ const CollectionSection = () => {
         { label: "Sophisticated", variant: "luxury" as BadgeVariant },
         { label: "Rich", variant: "luxury" as BadgeVariant },
         { label: "Eco - Friendly", variant: "eco" as BadgeVariant },
-      ]
+      ],
+      stripeProductId: "prod_SEYwYW2Damrmqo"
     },
     {
       id: 3,
@@ -50,7 +52,8 @@ const CollectionSection = () => {
         { label: "Aromatic", variant: "feature" as BadgeVariant },
         { label: "Eco - Friendly", variant: "eco" as BadgeVariant },
         { label: "Massage Candle", variant: "feature" as BadgeVariant },
-      ]
+      ],
+      stripeProductId: ""
     }
   ];
 
