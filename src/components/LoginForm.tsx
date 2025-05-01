@@ -32,12 +32,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose, switchView }) => {
         return;
       }
       
-      // Query the users table to find the user - disable the client-side filter
+      // Enable debug mode for this query to see full response
       const { data, error: queryError } = await supabase
         .from("users")
         .select("*")
         .eq("email", email.trim())
-        .maybeSingle();
+        .limit(1);
       
       console.log("Query result:", { data, queryError });
       
@@ -48,30 +48,31 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose, switchView }) => {
         return;
       }
       
-      // Check if user exists
-      if (!data) {
+      // Check if any users were found
+      if (!data || data.length === 0) {
         console.log("No user found with email:", email.trim());
         setError("No account found with this email address");
         setIsLoading(false);
         return;
       }
       
+      const user = data[0];
       console.log("Found user:", { 
-        id: data.id,
-        email: data.email,
-        passwordMatch: data.password === password
+        id: user.id,
+        email: user.email,
+        passwordMatch: user.password === password
       });
       
       // Compare passwords (in a real app, you'd use proper password hashing)
-      if (data.password === password) {
+      if (user.password === password) {
         console.log("Password match, login successful");
         
         // Store user session in localStorage
         localStorage.setItem("user", JSON.stringify({
-          id: data.id,
-          email: data.email,
-          firstName: data.first_name,
-          lastName: data.last_name
+          id: user.id,
+          email: user.email,
+          firstName: user.first_name,
+          lastName: user.last_name
         }));
         
         toast({
