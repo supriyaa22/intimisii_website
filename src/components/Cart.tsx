@@ -1,4 +1,5 @@
-import { Lock, Minus, Plus, ShoppingBag, X } from "lucide-react";
+
+import { Lock, Minus, Plus, ShoppingBag, X, Loader2 } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "./ui/sheet";
 import { Separator } from "./ui/separator";
 import { Progress } from "./ui/progress";
@@ -6,9 +7,24 @@ import { ScrollArea } from "./ui/scroll-area";
 import { useCart } from "../contexts/CartContext";
 
 export function Cart() {
-  const { isOpen, closeCart, items, removeItem, updateQuantity, total, savings } = useCart();
-  const FREE_SHIPPING_THRESHOLD = 300;
-  const progress = Math.min((total / FREE_SHIPPING_THRESHOLD) * 100, 100);
+  const { 
+    isOpen, 
+    closeCart, 
+    items, 
+    removeItem, 
+    updateQuantity, 
+    total, 
+    savings, 
+    freeShippingEligible, 
+    freeShippingMessage,
+    totalItems,
+    proceedToCheckout,
+    isProcessingPayment
+  } = useCart();
+  
+  // Calculate progress for the free shipping indicator
+  const FREE_SHIPPING_THRESHOLD = 2; // Number of items for free shipping
+  const progress = Math.min((totalItems / FREE_SHIPPING_THRESHOLD) * 100, 100);
 
   return (
     <Sheet open={isOpen} onOpenChange={closeCart}>
@@ -22,7 +38,7 @@ export function Cart() {
           </div>
           <div className="space-y-2">
             <p className="text-sm text-black">
-              Shop for ${FREE_SHIPPING_THRESHOLD - total > 0 ? (FREE_SHIPPING_THRESHOLD - total).toFixed(2) : '0'} to get FREE SHIPPING.
+              {freeShippingMessage}
             </p>
             <Progress value={progress} className="h-2 bg-gray-200" />
           </div>
@@ -85,9 +101,22 @@ export function Cart() {
                   <span className="text-black">${total.toFixed(2)}</span>
                 </div>
               </div>
-              <button className="w-full bg-[#3A1B1F] text-white py-4 flex items-center justify-center gap-2">
-                <Lock className="h-4 w-4" />
-                CONFIRM ORDER ${total.toFixed(2)}
+              <button 
+                className="w-full bg-[#3A1B1F] text-white py-4 flex items-center justify-center gap-2 disabled:opacity-70"
+                onClick={proceedToCheckout}
+                disabled={isProcessingPayment || items.length === 0}
+              >
+                {isProcessingPayment ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    PROCESSING...
+                  </>
+                ) : (
+                  <>
+                    <Lock className="h-4 w-4" />
+                    CONFIRM ORDER ${total.toFixed(2)}
+                  </>
+                )}
               </button>
             </div>
           </>
