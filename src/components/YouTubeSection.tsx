@@ -1,24 +1,26 @@
 
-import React from 'react';
+import React from "react";
 
 const YouTubeSection = () => {
   return (
-    <section className="w-full py-12 md:py-16 lg:py-20 bg-darkbg">
-      <div className="container mx-auto px-4 md:px-8 flex justify-center">
-        <div className="w-full max-w-4xl">
-          <div className="aspect-w-16 aspect-h-9">
-            <iframe 
-              src="https://www.youtube.com/embed/QMO9ISimNeI" 
-              title="'Lady Dior' Pearl Prestige: Stringing Together Timeless Beauty"
-              className="w-full h-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-            />
-          </div>
+    <div className="container mx-auto py-16 px-4 md:py-24">
+      <div className="max-w-5xl mx-auto">
+        <h2 className="text-3xl md:text-4xl font-playfair text-center mb-12 font-semibold">
+          Experience <span className="italic font-light">Intimisii</span>
+        </h2>
+        <div className="aspect-w-16 aspect-h-9 w-full">
+          <video 
+            controls 
+            width="100%" 
+            className="w-full h-auto border-radius-12 shadow-lg"
+            style={{ borderRadius: "12px" }}
+          >
+            <source src="/Videos/Intimisii_Teaser.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 
