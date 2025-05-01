@@ -8,6 +8,7 @@ const Hero = () => {
         src="/Videos/Intimisii_Teaser.mp4"
         autoPlay
         muted
+        loop
         controls
         playsInline
         className="w-full h-full object-cover"
