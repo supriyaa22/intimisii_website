@@ -17,8 +17,32 @@ import "./App.css";
 import { Toaster } from "./components/ui/toaster";
 import { CartProvider } from "./contexts/CartContext";
 import { Cart } from "./components/Cart";
+import { useEffect } from "react";
+import { supabase } from "./integrations/supabase/client";
 
 function App() {
+  useEffect(() => {
+    // Check for existing session on app load
+    const checkSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data && data.session) {
+        console.log("User is logged in:", data.session.user);
+      }
+    };
+
+    checkSession();
+
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth state changed:", event, session);
+    });
+
+    // Cleanup subscription on unmount
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
   return (
     <CartProvider>
       <Router>
