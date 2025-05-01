@@ -112,6 +112,9 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, user, onLo
 
   if (!user) return null;
 
+  // Find default address if any
+  const defaultAddress = addresses.find(addr => addr.isDefault);
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="p-0 border-none max-w-4xl mx-auto bg-transparent">
@@ -183,13 +186,14 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, user, onLo
                 {activeTab === 'address' && !showAddressForm && (
                   <div>
                     <div className="mb-4 p-4 bg-[#F7EFE8] text-[#333333] rounded-sm flex justify-between items-center">
-                      <p className="text-sm">Shipping Addresses:</p>
-                      <Button 
-                        onClick={handleAddNewAddress}
-                        className="bg-[#3A1B1F] hover:bg-[#4A2B2F] text-white text-xs py-1 px-3 flex items-center gap-1"
-                      >
-                        <Plus className="h-3 w-3" /> Add New Address
-                      </Button>
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm">Shipping Addresses:</p>
+                        {defaultAddress && (
+                          <span className="text-xs bg-[#3A1B1F] text-white px-2 py-0.5 rounded-full">
+                            Default Address
+                          </span>
+                        )}
+                      </div>
                     </div>
                     
                     <h3 className="text-gold uppercase text-sm font-semibold mt-6 mb-4">SAVED ADDRESSES</h3>
@@ -207,21 +211,21 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, user, onLo
                       ) : (
                         <div className="grid grid-cols-1 gap-4">
                           {addresses.map(address => (
-                            <div key={address.id} className="bg-[#242424] p-4 border border-[#333333] rounded-sm">
+                            <div key={address.id} className="bg-[#F7EFE8] p-4 border border-[#E5DACE] rounded-sm text-[#333333]">
                               <div className="flex justify-between items-start mb-2">
                                 <h4 className="font-medium">{address.name}</h4>
                                 <Button
                                   onClick={() => handleEditAddress(address)} 
                                   variant="ghost"
                                   size="sm"
-                                  className="text-white hover:bg-[#333333] p-1 h-auto"
+                                  className="text-[#333333] hover:bg-[#E5DACE] p-1 h-auto"
                                 >
                                   <Edit className="h-4 w-4" />
                                 </Button>
                               </div>
-                              <p className="text-sm text-gray-300">{address.streetAddress}</p>
-                              <p className="text-sm text-gray-300">{address.city}, {address.state} {address.zipCode}</p>
-                              <p className="text-sm text-gray-300">{address.country}</p>
+                              <p className="text-sm">{address.streetAddress}</p>
+                              <p className="text-sm">{address.city}, {address.state} {address.zipCode}</p>
+                              <p className="text-sm">{address.country}</p>
                               {address.isDefault && (
                                 <span className="text-xs bg-[#3A1B1F] text-white px-2 py-1 inline-block mt-2 rounded">
                                   Default Address
@@ -234,7 +238,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, user, onLo
                               onClick={handleAddNewAddress}
                               className="bg-transparent border border-[#333333] hover:bg-[#242424] text-white py-2 px-6 text-sm"
                             >
-                              Add Another Address
+                              Add New Address
                             </Button>
                           </div>
                         </div>
