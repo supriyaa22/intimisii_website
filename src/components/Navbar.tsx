@@ -1,10 +1,11 @@
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ShoppingBag, UserCircle } from "lucide-react";
+import { ShoppingBag, UserCircle, LogOut } from "lucide-react";
 import { useIsMobile } from "../hooks/use-mobile";
 import { useCart } from "../contexts/CartContext";
 import AuthModals from "./AuthModals";
+import AccountModal from "./AccountModal";
 
 interface UserData {
   id: string;
@@ -17,6 +18,7 @@ const Navbar = () => {
   const [isAtTop, setIsAtTop] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [user, setUser] = useState<UserData | null>(null);
   const isMobile = useIsMobile();
   const { toggleCart } = useCart();
@@ -24,6 +26,8 @@ const Navbar = () => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const openAuthModal = () => setIsAuthModalOpen(true);
   const closeAuthModal = () => setIsAuthModalOpen(false);
+  const openAccountModal = () => setIsAccountModalOpen(true);
+  const closeAccountModal = () => setIsAccountModalOpen(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -76,7 +80,7 @@ const Navbar = () => {
   };
 
   const UserAvatar = ({ firstName }: { firstName: string }) => (
-    <div className="flex items-center justify-center w-7 h-7 rounded-full bg-[#3A1B1F] text-white text-xs font-medium">
+    <div className="flex items-center justify-center w-7 h-7 rounded-full border border-[#C9AD7E] bg-[#3A1B1F] text-white text-xs font-serif">
       {firstName.charAt(0).toUpperCase()}
     </div>
   );
@@ -104,19 +108,10 @@ const Navbar = () => {
                   <ShoppingBag className="h-6 w-6" />
                 </button>
                 {user ? (
-                  <div className="relative group">
-                    <UserAvatar firstName={user.firstName} />
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg overflow-hidden z-20 hidden group-hover:block">
-                      <div className="py-2">
-                        <p className="px-4 py-2 text-sm text-gray-700">Signed in as {user.firstName}</p>
-                        <button
-                          onClick={handleLogout}
-                          className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100"
-                        >
-                          Sign out
-                        </button>
-                      </div>
-                    </div>
+                  <div className="relative">
+                    <button onClick={openAccountModal}>
+                      <UserAvatar firstName={user.firstName} />
+                    </button>
                   </div>
                 ) : (
                   <div 
@@ -167,19 +162,13 @@ const Navbar = () => {
                   <ShoppingBag className="h-5 w-5" />
                 </button>
                 {user ? (
-                  <div className="relative group">
-                    <UserAvatar firstName={user.firstName} />
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg overflow-hidden z-20 hidden group-hover:block">
-                      <div className="py-2">
-                        <p className="px-4 py-2 text-sm text-gray-700">Signed in as {user.firstName}</p>
-                        <button
-                          onClick={handleLogout}
-                          className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100"
-                        >
-                          Sign out
-                        </button>
-                      </div>
-                    </div>
+                  <div className="relative">
+                    <button 
+                      onClick={openAccountModal}
+                      className="focus:outline-none"
+                    >
+                      <UserAvatar firstName={user.firstName} />
+                    </button>
                   </div>
                 ) : (
                   <div 
@@ -230,6 +219,12 @@ const Navbar = () => {
       </header>
 
       <AuthModals isOpen={isAuthModalOpen} onClose={closeAuthModal} />
+      <AccountModal 
+        isOpen={isAccountModalOpen} 
+        onClose={closeAccountModal} 
+        user={user} 
+        onLogout={handleLogout} 
+      />
     </>
   );
 };
