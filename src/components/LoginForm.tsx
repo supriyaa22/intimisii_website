@@ -32,14 +32,17 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose, switchView }) => {
         return;
       }
       
-      // Enable debug mode for this query to see full response
+      // Directly query the database without using RLS for debugging
       const { data, error: queryError } = await supabase
         .from("users")
-        .select("*")
-        .eq("email", email.trim())
-        .limit(1);
+        .select("*");
       
-      console.log("Query result:", { data, queryError });
+      console.log("All users in database:", data);
+      
+      // Find the user with matching email (case insensitive)
+      const matchingUser = data?.find(
+        (user) => user.email.toLowerCase() === email.trim().toLowerCase()
+      );
       
       if (queryError) {
         console.error("Database query error:", queryError);
@@ -49,30 +52,29 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose, switchView }) => {
       }
       
       // Check if any users were found
-      if (!data || data.length === 0) {
+      if (!matchingUser) {
         console.log("No user found with email:", email.trim());
         setError("No account found with this email address");
         setIsLoading(false);
         return;
       }
       
-      const user = data[0];
       console.log("Found user:", { 
-        id: user.id,
-        email: user.email,
-        passwordMatch: user.password === password
+        id: matchingUser.id,
+        email: matchingUser.email,
+        passwordMatch: matchingUser.password === password
       });
       
       // Compare passwords (in a real app, you'd use proper password hashing)
-      if (user.password === password) {
+      if (matchingUser.password === password) {
         console.log("Password match, login successful");
         
         // Store user session in localStorage
         localStorage.setItem("user", JSON.stringify({
-          id: user.id,
-          email: user.email,
-          firstName: user.first_name,
-          lastName: user.last_name
+          id: matchingUser.id,
+          email: matchingUser.email,
+          firstName: matchingUser.first_name,
+          lastName: matchingUser.last_name
         }));
         
         toast({
