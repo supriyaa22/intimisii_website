@@ -22,20 +22,20 @@ import { supabase } from "./integrations/supabase/client";
 
 function App() {
   useEffect(() => {
-    // Check for existing session on app load
-    const checkSession = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data && data.session) {
-        console.log("User is logged in:", data.session.user);
-      }
-    };
-
-    checkSession();
-
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       console.log("Auth state changed:", event, session);
     });
+
+    // Load user from localStorage if exists
+    const checkLocalStorage = () => {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        console.log("User loaded from localStorage");
+      }
+    };
+    
+    checkLocalStorage();
 
     // Cleanup subscription on unmount
     return () => {

@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   Dialog,
@@ -79,18 +80,27 @@ const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose }) => {
     
     try {
       // Query the users table to find the user
-      const { data, error } = await supabase
+      const { data, error: queryError } = await supabase
         .from("users")
         .select("*")
-        .eq("email", email)
-        .single();
+        .eq("email", email.trim())
+        .maybeSingle();
       
-      if (error || !data) {
-        setError("❌ Invalid email or password");
+      if (queryError) {
+        console.error("Database query error:", queryError);
+        setError("❌ An error occurred during login");
+        setIsLoading(false);
         return;
       }
       
-      // Simple password check (in a real app, you'd use proper password hashing)
+      // Check if user exists and password matches
+      if (!data) {
+        setError("❌ Invalid email or password");
+        setIsLoading(false);
+        return;
+      }
+      
+      // Compare passwords (in a real app, you'd use proper password hashing)
       if (data.password === password) {
         // Store user session in localStorage
         localStorage.setItem("user", JSON.stringify({
