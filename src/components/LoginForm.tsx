@@ -15,6 +15,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose, switchView }) => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [bypassConfirmation, setBypassConfirmation] = useState(false);
   const { toast } = useToast();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -32,57 +33,102 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose, switchView }) => {
         return;
       }
       
-      // Use Supabase Auth signIn method
-      const { data, error: authError } = await supabase.auth.signInWithPassword({
-        email: email.trim().toLowerCase(),
-        password: password.trim()
-      });
-
-      if (authError) {
-        console.error("Authentication error:", authError);
-        
-        // Handle specific error cases
-        if (authError.message.includes("Email not confirmed")) {
-          setError("Please check your email and confirm your account before logging in.");
-        } else if (authError.message.includes("Invalid login credentials")) {
-          setError("Invalid email or password");
-        } else {
-          setError(`Error: ${authError.message}`);
+      if (bypassConfirmation) {
+        // Use direct database access for testing purposes
+        const { data: userData, error: fetchError } = await supabase
+          .from("users")
+          .select("*")
+          .eq("email", email.trim().toLowerCase())
+          .maybeSingle();
+          
+        if (fetchError) {
+          console.error("Error fetching user:", fetchError);
+          setError(`Error: ${fetchError.message}`);
+          setIsLoading(false);
+          return;
         }
         
-        setIsLoading(false);
-        return;
+        if (!userData) {
+          setError("No user found with this email");
+          setIsLoading(false);
+          return;
+        }
+        
+        if (userData.password !== password.trim()) {
+          setError("Invalid email or password");
+          setIsLoading(false);
+          return;
+        }
+        
+        // Store user session in localStorage
+        localStorage.setItem("user", JSON.stringify({
+          id: userData.id,
+          email: userData.email,
+          firstName: userData.first_name,
+          lastName: userData.last_name
+        }));
+        
+        toast({
+          title: "✅ Successfully logged in.",
+          className: "bg-green-500/80 text-white",
+        });
+        
+        onClose();
+        window.dispatchEvent(new Event("userLogin"));
+        
+      } else {
+        // Use Supabase Auth signIn method (requires email confirmation)
+        const { data, error: authError } = await supabase.auth.signInWithPassword({
+          email: email.trim().toLowerCase(),
+          password: password.trim()
+        });
+
+        if (authError) {
+          console.error("Authentication error:", authError);
+          
+          // Handle specific error cases
+          if (authError.message.includes("Email not confirmed")) {
+            setError("Please check your email and confirm your account before logging in.");
+          } else if (authError.message.includes("Invalid login credentials")) {
+            setError("Invalid email or password");
+          } else {
+            setError(`Error: ${authError.message}`);
+          }
+          
+          setIsLoading(false);
+          return;
+        }
+
+        // If we get here, authentication was successful
+        console.log("Login successful:", data);
+
+        // Get user profile details from the users table
+        const { data: userData, error: profileError } = await supabase
+          .from("users")
+          .select("*")
+          .eq("email", email.trim().toLowerCase())
+          .maybeSingle();
+
+        if (profileError) {
+          console.error("Error fetching user profile:", profileError);
+        }
+
+        // Store user session in localStorage
+        localStorage.setItem("user", JSON.stringify({
+          id: data.user?.id,
+          email: data.user?.email,
+          firstName: userData?.first_name || "",
+          lastName: userData?.last_name || ""
+        }));
+        
+        toast({
+          title: "✅ Successfully logged in.",
+          className: "bg-green-500/80 text-white",
+        });
+        
+        onClose();
+        window.dispatchEvent(new Event("userLogin"));
       }
-
-      // If we get here, authentication was successful
-      console.log("Login successful:", data);
-
-      // Get user profile details from the users table
-      const { data: userData, error: profileError } = await supabase
-        .from("users")
-        .select("*")
-        .eq("email", email.trim().toLowerCase())
-        .maybeSingle();
-
-      if (profileError) {
-        console.error("Error fetching user profile:", profileError);
-      }
-
-      // Store user session in localStorage
-      localStorage.setItem("user", JSON.stringify({
-        id: data.user?.id,
-        email: data.user?.email,
-        firstName: userData?.first_name || "",
-        lastName: userData?.last_name || ""
-      }));
-      
-      toast({
-        title: "✅ Successfully logged in.",
-        className: "bg-green-500/80 text-white",
-      });
-      
-      onClose();
-      window.dispatchEvent(new Event("userLogin"));
     } catch (err) {
       console.error("Login error:", err);
       setError("An error occurred during login");
@@ -170,6 +216,20 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose, switchView }) => {
           >
             Forgot your password?
           </button>
+        </div>
+
+        {/* Testing mode toggle for bypassing email confirmation */}
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            id="bypass-confirmation"
+            checked={bypassConfirmation}
+            onChange={() => setBypassConfirmation(!bypassConfirmation)}
+            className="mr-2"
+          />
+          <label htmlFor="bypass-confirmation" className="text-sm text-[#3A1B1F]">
+            Testing mode (bypass email confirmation)
+          </label>
         </div>
 
         <button 
