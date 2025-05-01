@@ -39,17 +39,20 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose, switchView }) => {
       
       console.log("All users in database:", data);
       
-      // Find the user with matching email (case insensitive)
-      const matchingUser = data?.find(
-        (user) => user.email.toLowerCase() === email.trim().toLowerCase()
-      );
-      
       if (queryError) {
         console.error("Database query error:", queryError);
         setError("An error occurred during login");
         setIsLoading(false);
         return;
       }
+      
+      // Find the user with matching email (case insensitive)
+      // Make sure this happens BEFORE checking if a user exists
+      const matchingUser = data?.find(
+        (user) => user.email.toLowerCase() === email.trim().toLowerCase()
+      );
+      
+      console.log("Matching user found:", matchingUser ? "Yes" : "No");
       
       // Check if any users were found
       if (!matchingUser) {
@@ -59,6 +62,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose, switchView }) => {
         return;
       }
       
+      console.log("Attempting to log in user:", matchingUser.email);
       console.log("Found user:", { 
         id: matchingUser.id,
         email: matchingUser.email,
