@@ -1,12 +1,30 @@
 
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { ShoppingBag, CheckCircle2 } from 'lucide-react';
+import { ShoppingBag, CheckCircle2, ExternalLink } from 'lucide-react';
+import { useCart } from '../contexts/CartContext';
+import { useToast } from '../hooks/use-toast';
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const sessionId = searchParams.get('session_id');
+  const { clearCart } = useCart();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    // Clear cart items after successful payment
+    if (sessionId) {
+      clearCart();
+      toast({
+        title: "Order Successful",
+        description: "Thank you for your purchase! Your order has been successfully processed.",
+        variant: "default",
+      });
+    }
+  }, [sessionId, clearCart, toast]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -28,6 +46,11 @@ const PaymentSuccess = () => {
               <ShoppingBag className="h-4 w-4" />
               CONTINUE SHOPPING
             </button>
+            {sessionId && (
+              <div className="text-sm text-gray-500 mt-4">
+                Order ID: {sessionId.substring(0, 12)}...
+              </div>
+            )}
           </div>
         </div>
       </main>

@@ -24,6 +24,7 @@ interface CartContextType {
   freeShippingMessage: string;
   proceedToCheckout: () => Promise<void>;
   isProcessingPayment: boolean;
+  clearCart: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -66,16 +67,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const toggleCart = () => setIsOpen(prev => !prev);
   const closeCart = () => setIsOpen(false);
+  
+  const clearCart = () => setItems([]);
 
   const total = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
   const savings = items.reduce((sum, item) => sum + 50, 0); // Example savings calculation
   
-  // Calculate total items for free shipping logic
-  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-  const FREE_SHIPPING_THRESHOLD = 2; // Number of items needed for free shipping
+  // Calculate total items for free shipping logic based on unique products (not quantity)
+  const totalItems = items.length;
+  const FREE_SHIPPING_THRESHOLD = 2; // Number of unique products needed for free shipping
   const freeShippingEligible = totalItems >= FREE_SHIPPING_THRESHOLD;
   
-  // Dynamic free shipping message
+  // Dynamic free shipping message based on unique products
   let freeShippingMessage = "";
   if (freeShippingEligible) {
     freeShippingMessage = "You have unlocked FREE SHIPPING!";
@@ -140,6 +143,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       freeShippingMessage,
       proceedToCheckout,
       isProcessingPayment,
+      clearCart,
     }}>
       {children}
     </CartContext.Provider>
