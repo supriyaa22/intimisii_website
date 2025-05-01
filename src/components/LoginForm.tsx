@@ -32,56 +32,54 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose, switchView }) => {
         return;
       }
       
-      // Query for the specific user by email (case insensitive)
-      const { data, error: queryError } = await supabase
+      // Use Supabase Auth signIn method
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
+        email: email.trim().toLowerCase(),
+        password: password.trim()
+      });
+
+      if (authError) {
+        console.error("Authentication error:", authError);
+        
+        if (authError.message.includes("Invalid login credentials")) {
+          setError("Invalid email or password");
+        } else {
+          setError(`Error: ${authError.message}`);
+        }
+        
+        setIsLoading(false);
+        return;
+      }
+
+      // If we get here, authentication was successful
+      console.log("Login successful:", data);
+
+      // Get user profile details from the users table
+      const { data: userData, error: profileError } = await supabase
         .from("users")
         .select("*")
         .eq("email", email.trim().toLowerCase())
         .maybeSingle();
-      
-      console.log("User query result:", data ? "Found" : "Not found");
-      
-      if (queryError) {
-        console.error("Supabase error:", queryError);
-        setError("An error occurred during login");
-        setIsLoading(false);
-        return;
+
+      if (profileError) {
+        console.error("Error fetching user profile:", profileError);
       }
+
+      // Store user session in localStorage
+      localStorage.setItem("user", JSON.stringify({
+        id: data.user?.id,
+        email: data.user?.email,
+        firstName: userData?.first_name || "",
+        lastName: userData?.last_name || ""
+      }));
       
-      // Check if user was found
-      if (!data) {
-        console.log("No user found with email:", email.trim());
-        setError("No account found with this email address");
-        setIsLoading(false);
-        return;
-      }
+      toast({
+        title: "✅ Successfully logged in.",
+        className: "bg-green-500/80 text-white",
+      });
       
-      console.log("Attempting to log in user:", data.email);
-      console.log("Password match:", data.password === password);
-      
-      // Compare passwords (in a real app, you'd use proper password hashing)
-      if (data.password === password) {
-        console.log("Password match, login successful");
-        
-        // Store user session in localStorage
-        localStorage.setItem("user", JSON.stringify({
-          id: data.id,
-          email: data.email,
-          firstName: data.first_name,
-          lastName: data.last_name
-        }));
-        
-        toast({
-          title: "✅ Successfully logged in.",
-          className: "bg-green-500/80 text-white",
-        });
-        
-        onClose();
-        window.dispatchEvent(new Event("userLogin"));
-      } else {
-        console.log("Password mismatch");
-        setError("Incorrect password");
-      }
+      onClose();
+      window.dispatchEvent(new Event("userLogin"));
     } catch (err) {
       console.error("Login error:", err);
       setError("An error occurred during login");

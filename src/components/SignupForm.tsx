@@ -66,52 +66,59 @@ const SignupForm: React.FC<SignupFormProps> = ({ switchView }) => {
     setIsLoading(true);
     
     try {
-      // Check if user with this email already exists
-      const { data: existingUser, error: checkError } = await supabase
-        .from("users")
-        .select("email")
-        .eq("email", email)
-        .single();
-      
-      if (checkError) {
-        if (checkError.code !== 'PGRST116') { // PGRST116 is "No rows returned" error
-          console.error("Error checking for existing user:", checkError);
-          setError(`Database error: ${checkError.message}`);
-          setIsLoading(false);
-          return;
+      // First, create the auth user with Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: email.trim().toLowerCase(),
+        password: password.trim(),
+        options: {
+          data: {
+            first_name: firstName.trim(),
+            last_name: lastName.trim()
+          }
         }
-        // If we get here, it means no user with this email exists, which is what we want
-      } else if (existingUser) {
-        // User with this email already exists
-        setError("Email already in use");
+      });
+      
+      if (authError) {
+        console.error("Authentication error:", authError);
+        
+        if (authError.message.includes("already registered")) {
+          setError("Email already in use");
+        } else {
+          setError(`Error creating account: ${authError.message}`);
+        }
+        
         setIsLoading(false);
         return;
       }
       
-      // Insert new user
+      // Now insert the user profile into the users table
       const { error: insertError } = await supabase
         .from("users")
         .insert([
           {
-            first_name: firstName,
-            last_name: lastName,
-            email,
-            password // In a real app, you'd hash this password
+            id: authData.user?.id,
+            first_name: firstName.trim(),
+            last_name: lastName.trim(),
+            email: email.trim().toLowerCase(),
+            password: password.trim() // In a real app, you'd hash this password
           }
         ]);
       
       if (insertError) {
-        console.error("Error inserting user:", insertError);
+        console.error("Error inserting user profile:", insertError);
+        
+        // If there's an error creating the profile, attempt to clean up the auth user
+        if (authData.user) {
+          await supabase.auth.admin.deleteUser(authData.user.id);
+        }
         
         if (insertError.code === '23505') { // Unique violation
           setError("Email already in use");
-        } else if (insertError.message.includes("new row violates row-level security policy")) {
-          setError("Permission denied: Unable to create account");
-          console.error("RLS Policy violation:", insertError);
         } else {
           setError(`Error creating account: ${insertError.message}`);
         }
         
+        setIsLoading(false);
         return;
       }
       
@@ -125,7 +132,6 @@ const SignupForm: React.FC<SignupFormProps> = ({ switchView }) => {
     } catch (err: any) {
       console.error("Signup error:", err);
       setError(`An unexpected error occurred: ${err.message}`);
-    } finally {
       setIsLoading(false);
     }
   };
