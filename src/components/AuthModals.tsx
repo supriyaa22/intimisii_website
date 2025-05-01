@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Dialog,
@@ -79,15 +78,15 @@ const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose }) => {
     setIsLoading(true);
     
     try {
-      // Query the auth_users table to find the user
+      // Query the users table to find the user
       const { data, error } = await supabase
-        .from("auth_users")
+        .from("users")
         .select("*")
         .eq("email", email)
         .single();
       
       if (error || !data) {
-        setError("Username not found or password incorrect");
+        setError("❌ Invalid email or password");
         return;
       }
       
@@ -109,7 +108,7 @@ const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose }) => {
         onClose();
         window.dispatchEvent(new Event("userLogin"));
       } else {
-        setError("Username not found or password incorrect");
+        setError("❌ Invalid email or password");
       }
     } catch (err) {
       console.error("Login error:", err);
@@ -133,7 +132,7 @@ const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose }) => {
     try {
       // Check if user with this email already exists
       const { data: existingUser, error: checkError } = await supabase
-        .from("auth_users")
+        .from("users")
         .select("email")
         .eq("email", email)
         .single();
@@ -155,7 +154,7 @@ const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose }) => {
       
       // Insert new user
       const { error: insertError } = await supabase
-        .from("auth_users")
+        .from("users")
         .insert([
           {
             first_name: firstName,

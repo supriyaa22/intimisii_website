@@ -9,9 +9,9 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      auth_users: {
+      users: {
         Row: {
-          created_at: string | null
+          created_at: string
           email: string
           first_name: string
           id: string
@@ -19,7 +19,7 @@ export type Database = {
           password: string
         }
         Insert: {
-          created_at?: string | null
+          created_at?: string
           email: string
           first_name: string
           id?: string
@@ -27,122 +27,12 @@ export type Database = {
           password: string
         }
         Update: {
-          created_at?: string | null
+          created_at?: string
           email?: string
           first_name?: string
           id?: string
           last_name?: string
           password?: string
-        }
-        Relationships: []
-      }
-      item: {
-        Row: {
-          item_id: number
-          item_name: string
-          price: number
-        }
-        Insert: {
-          item_id?: never
-          item_name: string
-          price: number
-        }
-        Update: {
-          item_id?: never
-          item_name?: string
-          price?: number
-        }
-        Relationships: []
-      }
-      order: {
-        Row: {
-          order_date: string | null
-          order_id: number
-          total_amount: number | null
-          user_id: number
-        }
-        Insert: {
-          order_date?: string | null
-          order_id?: never
-          total_amount?: number | null
-          user_id: number
-        }
-        Update: {
-          order_date?: string | null
-          order_id?: never
-          total_amount?: number | null
-          user_id?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "order_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user"
-            referencedColumns: ["user_id"]
-          },
-        ]
-      }
-      order_item: {
-        Row: {
-          item_id: number
-          order_id: number
-          order_item_id: number
-          quantity: number
-          subtotal: number
-        }
-        Insert: {
-          item_id: number
-          order_id: number
-          order_item_id?: never
-          quantity: number
-          subtotal: number
-        }
-        Update: {
-          item_id?: number
-          order_id?: number
-          order_item_id?: never
-          quantity?: number
-          subtotal?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "order_item_item_id_fkey"
-            columns: ["item_id"]
-            isOneToOne: false
-            referencedRelation: "item"
-            referencedColumns: ["item_id"]
-          },
-          {
-            foreignKeyName: "order_item_order_id_fkey"
-            columns: ["order_id"]
-            isOneToOne: false
-            referencedRelation: "order"
-            referencedColumns: ["order_id"]
-          },
-        ]
-      }
-      user: {
-        Row: {
-          created_at: string | null
-          email: string
-          password: string
-          user_id: number
-          username: string
-        }
-        Insert: {
-          created_at?: string | null
-          email: string
-          password: string
-          user_id?: never
-          username: string
-        }
-        Update: {
-          created_at?: string | null
-          email?: string
-          password?: string
-          user_id?: never
-          username?: string
         }
         Relationships: []
       }
