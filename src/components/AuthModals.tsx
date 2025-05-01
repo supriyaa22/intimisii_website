@@ -81,7 +81,14 @@ const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose }) => {
     try {
       console.log("Attempting login with email:", email.trim());
       
-      // Query the users table to find the user
+      // Check for empty fields first
+      if (!email.trim() || !password.trim()) {
+        setError("Email and password are required");
+        setIsLoading(false);
+        return;
+      }
+      
+      // Query the users table to find the user - disable the client-side filter
       const { data, error: queryError } = await supabase
         .from("users")
         .select("*")
@@ -92,7 +99,7 @@ const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose }) => {
       
       if (queryError) {
         console.error("Database query error:", queryError);
-        setError("❌ An error occurred during login");
+        setError("An error occurred during login");
         setIsLoading(false);
         return;
       }
@@ -100,7 +107,7 @@ const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose }) => {
       // Check if user exists
       if (!data) {
         console.log("No user found with email:", email.trim());
-        setError("❌ Invalid email or password");
+        setError("No account found with this email address");
         setIsLoading(false);
         return;
       }
@@ -132,7 +139,7 @@ const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose }) => {
         window.dispatchEvent(new Event("userLogin"));
       } else {
         console.log("Password mismatch");
-        setError("❌ Invalid email or password");
+        setError("Email found, but password is incorrect");
       }
     } catch (err) {
       console.error("Login error:", err);
