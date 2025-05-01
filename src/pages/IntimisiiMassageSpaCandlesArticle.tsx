@@ -50,7 +50,7 @@ const IntimisiiMassageSpaCandlesArticle = () => {
           {/* Hero Image with Gold Border - UPDATED IMAGE */}
           <div className="mb-12 mx-auto p-1 border border-[#C9AD7E]/70 max-w-3xl">
             <img 
-              src="/lovable-uploads/7aec83ae-3627-427e-a8dc-1f5afed29490.png"
+              src="/lovable-uploads/9ed8ca21-42bc-4f88-a4ca-a508510db68a.png"
               alt="Intimisii Massage Spa Candles" 
               className="w-full h-auto"
             />

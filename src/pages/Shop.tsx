@@ -37,7 +37,7 @@ const products: Product[] = [
     id: 3,
     name: "Adiva Signature Bougié Massage Spa Candle",
     price: 79,
-    image: "/lovable-uploads/cff2b946-86c8-4495-8d0f-1b24df9821aa.png",
+    image: "/lovable-uploads/9ed8ca21-42bc-4f88-a4ca-a508510db68a.png",
     description: "Intimisii's Massage Spa Candles offer a harmonious blend of luxury and functionality, transforming any space into a serene sanctuary while providing exceptional skin benefits.",
     details: "A passionate ode to the art of indulgence, crafting a sensory journey of pure, unadulterated luxury.",
     badges: [

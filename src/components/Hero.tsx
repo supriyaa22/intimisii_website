@@ -7,11 +7,13 @@ const Hero = () => {
       <video
         src="/Videos/Intimisii_Teaser.mp4"
         autoPlay
-        muted
         loop
         controls
         playsInline
         className="w-full h-full object-cover"
+        onLoadedMetadata={(e) => {
+          e.currentTarget.volume = 0.7;
+        }}
       >
         Your browser does not support the video tag.
       </video>
