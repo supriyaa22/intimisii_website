@@ -41,7 +41,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose, switchView }) => {
       if (authError) {
         console.error("Authentication error:", authError);
         
-        if (authError.message.includes("Invalid login credentials")) {
+        // Handle specific error cases
+        if (authError.message.includes("Email not confirmed")) {
+          setError("Please check your email and confirm your account before logging in.");
+        } else if (authError.message.includes("Invalid login credentials")) {
           setError("Invalid email or password");
         } else {
           setError(`Error: ${authError.message}`);
@@ -88,12 +91,54 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose, switchView }) => {
     }
   };
 
+  // Function to resend confirmation email
+  const handleResendConfirmation = async () => {
+    if (!email.trim()) {
+      setError("Please enter your email address first");
+      return;
+    }
+    
+    setIsLoading(true);
+    
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email.trim().toLowerCase(),
+      });
+      
+      if (error) {
+        console.error("Error resending confirmation:", error);
+        setError(`Failed to resend: ${error.message}`);
+      } else {
+        toast({
+          title: "✅ Confirmation email sent",
+          description: "Please check your inbox for the confirmation link",
+          className: "bg-green-500/80 text-white",
+        });
+      }
+    } catch (err) {
+      console.error("Resend error:", err);
+      setError("Failed to resend confirmation email");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center">
       {error && (
         <Alert variant="destructive" className="mb-4 bg-red-100 border-red-400">
           <AlertDescription className="text-red-800">
             {error}
+            {error.includes("confirm your account") && (
+              <button 
+                onClick={handleResendConfirmation}
+                className="ml-2 underline hover:text-red-700"
+                disabled={isLoading}
+              >
+                Resend confirmation
+              </button>
+            )}
           </AlertDescription>
         </Alert>
       )}
