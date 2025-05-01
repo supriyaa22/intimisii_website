@@ -9,15 +9,12 @@ const YouTubeSection = () => {
           Experience <span className="italic font-light">Intimisii</span>
         </h2>
         <div className="aspect-w-16 aspect-h-9 w-full">
-          <video 
-            controls 
-            width="100%" 
-            className="w-full h-auto border-radius-12 shadow-lg"
-            style={{ borderRadius: "12px" }}
-          >
-            <source src="/Videos/Intimisii_Teaser.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+          {/* Video has been moved to the Hero component */}
+          <div className="w-full h-full flex items-center justify-center bg-opacity-20 bg-white rounded-lg p-8">
+            <p className="text-center text-xl italic">
+              Discover the Intimisii experience through our products
+            </p>
+          </div>
         </div>
       </div>
     </div>
