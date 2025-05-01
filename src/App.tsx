@@ -31,7 +31,13 @@ function App() {
     const checkLocalStorage = () => {
       const storedUser = localStorage.getItem("user");
       if (storedUser) {
-        console.log("User loaded from localStorage");
+        try {
+          const userData = JSON.parse(storedUser);
+          console.log("User loaded from localStorage:", userData.email);
+        } catch (err) {
+          console.error("Error parsing user data from localStorage:", err);
+          localStorage.removeItem("user"); // Remove invalid data
+        }
       }
     };
     

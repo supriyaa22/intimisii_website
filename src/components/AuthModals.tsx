@@ -79,12 +79,16 @@ const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose }) => {
     setIsLoading(true);
     
     try {
+      console.log("Attempting login with email:", email.trim());
+      
       // Query the users table to find the user
       const { data, error: queryError } = await supabase
         .from("users")
         .select("*")
         .eq("email", email.trim())
         .maybeSingle();
+      
+      console.log("Query result:", { data, queryError });
       
       if (queryError) {
         console.error("Database query error:", queryError);
@@ -93,15 +97,24 @@ const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose }) => {
         return;
       }
       
-      // Check if user exists and password matches
+      // Check if user exists
       if (!data) {
+        console.log("No user found with email:", email.trim());
         setError("❌ Invalid email or password");
         setIsLoading(false);
         return;
       }
       
+      console.log("Found user:", { 
+        id: data.id,
+        email: data.email,
+        passwordMatch: data.password === password
+      });
+      
       // Compare passwords (in a real app, you'd use proper password hashing)
       if (data.password === password) {
+        console.log("Password match, login successful");
+        
         // Store user session in localStorage
         localStorage.setItem("user", JSON.stringify({
           id: data.id,
@@ -118,6 +131,7 @@ const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose }) => {
         onClose();
         window.dispatchEvent(new Event("userLogin"));
       } else {
+        console.log("Password mismatch");
         setError("❌ Invalid email or password");
       }
     } catch (err) {
@@ -230,7 +244,7 @@ const AuthModals: React.FC<AuthModalsProps> = ({ isOpen, onClose }) => {
             {error && (
               <Alert variant="destructive" className="mb-4 bg-red-100 border-red-400">
                 <AlertDescription className="text-red-800">
-                  ❌ {error}
+                  {error}
                 </AlertDescription>
               </Alert>
             )}
