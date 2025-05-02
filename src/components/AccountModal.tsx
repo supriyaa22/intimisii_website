@@ -53,6 +53,8 @@ interface AccountModalProps {
 
 type TabType = 'orders' | 'address' | 'logout';
 
+const PAGE_SIZE = 2; // Number of orders to fetch per page
+
 const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, user, onLogout }) => {
   const [activeTab, setActiveTab] = useState<TabType>('orders');
   const [addresses, setAddresses] = useState<Address[]>([]);
@@ -70,6 +72,8 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, user, onLo
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
   const { toast } = useToast();
 
   // Fetch orders when the modal opens and user is authenticated
@@ -79,23 +83,39 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, user, onLo
     }
   }, [isOpen, user]);
 
-  const fetchOrders = async () => {
+  const fetchOrders = async (loadMore = false) => {
     if (!user) return;
     
     setIsLoading(true);
     setError(null);
     
     try {
-      // Fetch orders
+      const currentPage = loadMore ? page + 1 : 0;
+      
+      // Fetch orders - filter out orders with total_amount = 0
       const { data: ordersData, error: ordersError } = await supabase
         .from('orders')
         .select('*')
-        .order('created_at', { ascending: false });
+        .gt('total_amount', 0) // Only get orders with amount greater than 0
+        .order('created_at', { ascending: false })
+        .range(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE - 1);
         
       if (ordersError) throw ordersError;
       
+      // Check if there are more orders
+      const { count, error: countError } = await supabase
+        .from('orders')
+        .select('*', { count: 'exact', head: true })
+        .gt('total_amount', 0);
+        
+      if (countError) throw countError;
+      
+      setHasMore(count ? count > (currentPage + 1) * PAGE_SIZE : false);
+      
       if (!ordersData || ordersData.length === 0) {
-        setOrders([]);
+        if (!loadMore) {
+          setOrders([]);
+        }
         setIsLoading(false);
         return;
       }
@@ -117,7 +137,10 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, user, onLo
         })
       );
       
-      setOrders(ordersWithItems);
+      // If loading more, append to existing orders, otherwise replace
+      setOrders(prevOrders => loadMore ? [...prevOrders, ...ordersWithItems] : ordersWithItems);
+      setPage(currentPage);
+      
       console.log("Orders fetched successfully:", ordersWithItems);
     } catch (err) {
       console.error('Error fetching orders:', err);
@@ -125,6 +148,10 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, user, onLo
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleLoadMore = () => {
+    fetchOrders(true);
   };
 
   const handleTabClick = (tab: TabType) => {
@@ -269,7 +296,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, user, onLo
                     
                     <h3 className="text-gold uppercase text-sm font-semibold mt-6 mb-4">ORDERS</h3>
                     <div className="border-t border-[#333333] py-4">
-                      {isLoading ? (
+                      {isLoading && orders.length === 0 ? (
                         <div className="space-y-4">
                           <Skeleton className="h-16 w-full bg-[#242424]" />
                           <Skeleton className="h-16 w-full bg-[#242424]" />
@@ -278,7 +305,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, user, onLo
                         <div className="text-center py-6">
                           <p className="text-sm text-red-400">{error}</p>
                           <Button 
-                            onClick={fetchOrders} 
+                            onClick={() => fetchOrders()} 
                             variant="outline" 
                             className="mt-2 text-sm border-[#333333] text-white hover:bg-[#242424]"
                           >
@@ -291,10 +318,10 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, user, onLo
                         <div className="space-y-4">
                           {orders.map(order => (
                             <div key={order.id} className="bg-[#242424] p-4 rounded-sm border border-[#333333]">
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="grid grid-cols-2 gap-4">
                                 <div>
                                   <p className="text-sm text-gray-400">Order ID</p>
-                                  <p className="text-sm font-medium">{order.id}</p>
+                                  <p className="text-sm font-medium truncate">{order.id}</p>
                                 </div>
                                 <div>
                                   <p className="text-sm text-gray-400">Total</p>
@@ -314,6 +341,24 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, user, onLo
                               </p>
                             </div>
                           ))}
+                          
+                          {isLoading && orders.length > 0 && (
+                            <div className="my-4">
+                              <Skeleton className="h-12 w-full bg-[#242424]" />
+                            </div>
+                          )}
+                          
+                          {hasMore && !isLoading && (
+                            <div className="text-center mt-6">
+                              <Button
+                                onClick={handleLoadMore}
+                                variant="outline"
+                                className="border border-[#333333] text-white hover:bg-[#242424]"
+                              >
+                                Load More
+                              </Button>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
