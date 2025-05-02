@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent } from './ui/dialog';
 import { ArrowLeft, ShoppingBag, MapPin, LogOut, Plus, Edit } from 'lucide-react';
@@ -11,6 +10,7 @@ import { supabase } from '../integrations/supabase/client';
 import { Skeleton } from './ui/skeleton';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from './ui/table';
 import { Separator } from './ui/separator';
+import { useToast } from '../hooks/use-toast';
 
 interface UserData {
   id: string;
@@ -70,6 +70,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, user, onLo
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
 
   // Fetch orders when the modal opens and user is authenticated
   useEffect(() => {
@@ -117,6 +118,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, user, onLo
       );
       
       setOrders(ordersWithItems);
+      console.log("Orders fetched successfully:", ordersWithItems);
     } catch (err) {
       console.error('Error fetching orders:', err);
       setError('Failed to load orders. Please try again later.');
@@ -203,6 +205,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, user, onLo
     }).format(amount);
   };
 
+  
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="p-0 border-none max-w-4xl mx-auto bg-transparent">

@@ -6,25 +6,88 @@ import Footer from '../components/Footer';
 import { ShoppingBag, CheckCircle2, ExternalLink } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { useToast } from '../hooks/use-toast';
+import { supabase } from '../integrations/supabase/client';
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get('session_id');
-  const { clearCart } = useCart();
+  const { items, clearCart } = useCart();
   const { toast } = useToast();
 
   useEffect(() => {
     // Clear cart items after successful payment
     if (sessionId) {
-      clearCart();
-      toast({
-        title: "Order Successful",
-        description: "Thank you for your purchase! Your order has been successfully processed.",
-        variant: "default",
-      });
+      const saveOrderToDatabase = async () => {
+        try {
+          // Get current user
+          const { data: { user } } = await supabase.auth.getUser();
+          
+          if (!user) {
+            console.log("User not authenticated, order will not be saved to account");
+            clearCart();
+            return;
+          }
+          
+          // Calculate total from cart items
+          const total = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+          
+          // Create order record
+          const { data: orderData, error: orderError } = await supabase
+            .from('orders')
+            .insert([
+              { 
+                user_id: user.id,
+                total_amount: total,
+              }
+            ])
+            .select()
+            .single();
+            
+          if (orderError) {
+            throw orderError;
+          }
+          
+          // Create order items records
+          const orderItems = items.map(item => ({
+            order_id: orderData.id,
+            product_name: item.product.name,
+            quantity: item.quantity,
+            price: item.product.price
+          }));
+          
+          const { error: itemsError } = await supabase
+            .from('order_items')
+            .insert(orderItems);
+            
+          if (itemsError) {
+            throw itemsError;
+          }
+          
+          console.log('Order saved successfully:', orderData.id);
+          
+          // Show success toast
+          toast({
+            title: "Order Successful",
+            description: "Thank you for your purchase! Your order has been successfully processed and saved to your account.",
+            variant: "default",
+          });
+          
+        } catch (error) {
+          console.error('Error saving order:', error);
+          toast({
+            title: "Order Processed",
+            description: "Your payment was successful, but we couldn't save your order details. Please contact support.",
+            variant: "destructive",
+          });
+        } finally {
+          clearCart();
+        }
+      };
+      
+      saveOrderToDatabase();
     }
-  }, [sessionId, clearCart, toast]);
+  }, [sessionId, clearCart, toast, items]);
 
   return (
     <div className="min-h-screen flex flex-col">
