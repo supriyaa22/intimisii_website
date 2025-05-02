@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent } from './ui/dialog';
 import { ArrowLeft, ShoppingBag, MapPin, LogOut, Plus, Edit } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -7,6 +7,10 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { supabase } from '../integrations/supabase/client';
+import { Skeleton } from './ui/skeleton';
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from './ui/table';
+import { Separator } from './ui/separator';
 
 interface UserData {
   id: string;
@@ -24,6 +28,20 @@ interface Address {
   zipCode: string;
   country: string;
   isDefault?: boolean;
+}
+
+interface OrderItem {
+  id: string;
+  product_name: string;
+  quantity: number;
+  price: number;
+}
+
+interface Order {
+  id: string;
+  total_amount: number;
+  created_at: string;
+  items: OrderItem[];
 }
 
 interface AccountModalProps {
@@ -49,6 +67,63 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, user, onLo
     country: 'United States',
     isDefault: false,
   });
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch orders when the modal opens and user is authenticated
+  useEffect(() => {
+    if (isOpen && user) {
+      fetchOrders();
+    }
+  }, [isOpen, user]);
+
+  const fetchOrders = async () => {
+    if (!user) return;
+    
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      // Fetch orders
+      const { data: ordersData, error: ordersError } = await supabase
+        .from('orders')
+        .select('*')
+        .order('created_at', { ascending: false });
+        
+      if (ordersError) throw ordersError;
+      
+      if (!ordersData || ordersData.length === 0) {
+        setOrders([]);
+        setIsLoading(false);
+        return;
+      }
+      
+      // For each order, fetch its items
+      const ordersWithItems = await Promise.all(
+        ordersData.map(async (order) => {
+          const { data: itemsData, error: itemsError } = await supabase
+            .from('order_items')
+            .select('*')
+            .eq('order_id', order.id);
+            
+          if (itemsError) throw itemsError;
+          
+          return {
+            ...order,
+            items: itemsData || []
+          };
+        })
+      );
+      
+      setOrders(ordersWithItems);
+    } catch (err) {
+      console.error('Error fetching orders:', err);
+      setError('Failed to load orders. Please try again later.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleTabClick = (tab: TabType) => {
     if (tab === 'logout') {
@@ -115,6 +190,19 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, user, onLo
   // Find default address if any
   const defaultAddress = addresses.find(addr => addr.isDefault);
 
+  // Format products names from order items
+  const getProductNames = (items: OrderItem[]): string => {
+    return items.map(item => item.product_name).join(', ');
+  };
+
+  // Format currency
+  const formatCurrency = (amount: number): string => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(amount);
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="p-0 border-none max-w-4xl mx-auto bg-transparent">
@@ -178,7 +266,53 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, user, onLo
                     
                     <h3 className="text-gold uppercase text-sm font-semibold mt-6 mb-4">ORDERS</h3>
                     <div className="border-t border-[#333333] py-4">
-                      <p className="text-center py-6 text-sm">You haven't placed any orders yet.</p>
+                      {isLoading ? (
+                        <div className="space-y-4">
+                          <Skeleton className="h-16 w-full bg-[#242424]" />
+                          <Skeleton className="h-16 w-full bg-[#242424]" />
+                        </div>
+                      ) : error ? (
+                        <div className="text-center py-6">
+                          <p className="text-sm text-red-400">{error}</p>
+                          <Button 
+                            onClick={fetchOrders} 
+                            variant="outline" 
+                            className="mt-2 text-sm border-[#333333] text-white hover:bg-[#242424]"
+                          >
+                            Try Again
+                          </Button>
+                        </div>
+                      ) : orders.length === 0 ? (
+                        <p className="text-center py-6 text-sm">You haven't placed any orders yet.</p>
+                      ) : (
+                        <div className="space-y-4">
+                          {orders.map(order => (
+                            <div key={order.id} className="bg-[#242424] p-4 rounded-sm border border-[#333333]">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                  <p className="text-sm text-gray-400">Order ID</p>
+                                  <p className="text-sm font-medium">{order.id}</p>
+                                </div>
+                                <div>
+                                  <p className="text-sm text-gray-400">Total</p>
+                                  <p className="text-sm font-medium">{formatCurrency(order.total_amount)}</p>
+                                </div>
+                              </div>
+                              
+                              <Separator className="my-3 bg-[#333333]" />
+                              
+                              <div>
+                                <p className="text-sm text-gray-400">Products</p>
+                                <p className="text-sm font-medium">{getProductNames(order.items)}</p>
+                              </div>
+                              
+                              <p className="text-xs text-gray-500 mt-2">
+                                Ordered on {new Date(order.created_at).toLocaleDateString()}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
