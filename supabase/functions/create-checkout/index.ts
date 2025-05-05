@@ -15,6 +15,8 @@ serve(async (req) => {
   }
 
   try {
+    console.log("Creating checkout session");
+    
     // Initialize Stripe with the secret key
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
       apiVersion: "2023-10-16",
@@ -22,7 +24,11 @@ serve(async (req) => {
 
     // Parse request body for order details
     const { items, total, email } = await req.json();
+    console.log(`Checkout requested for ${items.length} items, total: ${total}, email: ${email || 'guest'}`);
 
+    // Get the origin for success/cancel URLs
+    const origin = req.headers.get("origin") || "http://localhost:5173";
+    
     // Create a Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -33,7 +39,7 @@ serve(async (req) => {
             price_data: {
               currency: "usd",
               product: item.product.stripeProductId,
-              unit_amount: item.product.price * 100, // convert to cents
+              unit_amount: Math.round(item.product.price * 100), // convert to cents
             },
             quantity: item.quantity,
           };
@@ -46,29 +52,38 @@ serve(async (req) => {
                 name: item.product.name,
                 images: [item.product.image],
               },
-              unit_amount: item.product.price * 100, // convert to cents
+              unit_amount: Math.round(item.product.price * 100), // convert to cents
             },
             quantity: item.quantity,
           };
         }
       }),
       mode: "payment",
-      success_url: `${req.headers.get("origin")}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.headers.get("origin")}/payment-cancelled`,
+      success_url: `${origin}/payment-success?session_id={CHECKOUT_SESSION_ID}&total=${total}`,
+      cancel_url: `${origin}/payment-cancelled`,
       customer_email: email || undefined,
       metadata: {
-        order_total: total,
+        order_total: total.toString(),
         customer_email: email || '',
-        items_count: items.length
+        items_count: items.length.toString(),
+        items_json: JSON.stringify(items.map((item: any) => ({
+          id: item.product.id,
+          name: item.product.name,
+          quantity: item.quantity,
+          price: item.product.price
+        }))).slice(0, 500) // Stripe has a metadata value limit
       },
     });
 
+    console.log(`Checkout session created: ${session.id}`);
+    
     // Return the session ID and URL to the client
     return new Response(JSON.stringify({ id: session.id, url: session.url }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
   } catch (error) {
+    console.error("Error creating checkout session:", error.message);
     return new Response(JSON.stringify({ error: error.message }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,
