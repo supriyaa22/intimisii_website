@@ -90,27 +90,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   // Function to proceed to checkout with Stripe
   const proceedToCheckout = async () => {
     try {
-      // Prevent multiple checkout attempts
-      if (isProcessingPayment || items.length === 0) {
-        return;
-      }
-      
       setIsProcessingPayment(true);
       
       // Get user email if logged in
       const { data: { user } } = await supabase.auth.getUser();
       const email = user?.email;
-
-      // Calculate total to ensure accuracy
-      const calculatedTotal = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
-      
-      console.log(`Proceeding to checkout with ${items.length} items and total: ${calculatedTotal.toFixed(2)}`);
       
       // Call our Supabase edge function to create a Stripe checkout session
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         body: { 
           items, 
-          total: calculatedTotal,
+          total,
           email 
         }
       });
@@ -121,10 +111,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       
       // Redirect to Stripe checkout
       if (data.url) {
-        // Store the total in localStorage as a backup
-        localStorage.setItem('last_order_total', calculatedTotal.toString());
-        
-        // Redirect to the Stripe checkout page
         window.location.href = data.url;
       } else {
         throw new Error('No checkout URL returned');
