@@ -24,7 +24,7 @@ serve(async (req) => {
     console.log(`Total amount: ${total.toFixed(2)}`);
 
     // Get domain from request origin or referer header
-    const origin = req.headers.get("origin") || req.headers.get("referer")?.split(/[?#]/)[0] || "https://lovable-ecommerce-intimisii.vercel.app";
+    const origin = req.headers.get("origin") || req.headers.get("referer")?.split(/[?#]/)[0] || "https://intimisii.lovable.app";
     console.log(`Using origin: ${origin}`);
 
     // Format line items for Stripe
