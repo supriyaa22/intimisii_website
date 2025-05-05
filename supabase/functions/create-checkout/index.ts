@@ -29,6 +29,9 @@ serve(async (req) => {
       0
     );
 
+    console.log(`Creating checkout session for ${email || 'guest'} with ${items.length} items`);
+    console.log(`Total amount: ${calculatedTotal.toFixed(2)}`);
+
     // Create a Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -69,16 +72,19 @@ serve(async (req) => {
       },
     });
 
+    console.log(`Checkout session created with ID: ${session.id}`);
+
     // Return the session ID and URL to the client
     return new Response(JSON.stringify({ 
       id: session.id, 
       url: session.url,
-      order_total: calculatedTotal // Send the calculated total back to client
+      order_total: calculatedTotal.toFixed(2) // Send the calculated total back to client
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
   } catch (error) {
+    console.error('Error creating checkout session:', error.message);
     return new Response(JSON.stringify({ error: error.message }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,

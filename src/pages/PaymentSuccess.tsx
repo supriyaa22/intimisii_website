@@ -16,13 +16,14 @@ const PaymentSuccess = () => {
   const { items, clearCart } = useCart();
   const { toast } = useToast();
   const [orderProcessed, setOrderProcessed] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     // Only process the order once and only if we have a valid session ID
-    if (sessionId && !orderProcessed && items.length > 0) {
+    if (sessionId && !orderProcessed && !isProcessing) {
       const saveOrderToDatabase = async () => {
         try {
-          setOrderProcessed(true); // Mark as processed immediately to prevent duplicate calls
+          setIsProcessing(true); // Prevent concurrent processing
           
           // Get current user
           const { data: { user } } = await supabase.auth.getUser();
@@ -38,6 +39,8 @@ const PaymentSuccess = () => {
             ? parseFloat(orderTotal)
             : items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
           
+          console.log('Checking for existing order with session ID:', sessionId);
+          
           // Check if an order with this session ID already exists
           const { data: existingOrder } = await supabase
             .from('orders')
@@ -47,8 +50,9 @@ const PaymentSuccess = () => {
             
           if (existingOrder) {
             console.log('Order already exists for this session:', existingOrder.id);
+            setOrderProcessed(true);
             
-            // Show success toast
+            // Show success toast only once
             toast({
               title: "Order Successful",
               description: "Thank you for your purchase! Your order has been successfully processed.",
@@ -58,6 +62,8 @@ const PaymentSuccess = () => {
             clearCart();
             return;
           }
+          
+          console.log('No existing order found, creating new order with total:', total);
           
           // Create order record
           const { data: orderData, error: orderError } = await supabase
@@ -93,8 +99,9 @@ const PaymentSuccess = () => {
           }
           
           console.log('Order saved successfully:', orderData.id);
+          setOrderProcessed(true);
           
-          // Show success toast
+          // Show success toast only once
           toast({
             title: "Order Successful",
             description: "Thank you for your purchase! Your order has been successfully processed and saved to your account.",
@@ -110,12 +117,13 @@ const PaymentSuccess = () => {
           });
         } finally {
           clearCart();
+          setIsProcessing(false);
         }
       };
       
       saveOrderToDatabase();
     }
-  }, [sessionId, clearCart, toast, items, orderProcessed, orderTotal]);
+  }, [sessionId, clearCart, toast, items, orderProcessed, orderTotal, isProcessing]);
 
   return (
     <div className="min-h-screen flex flex-col">

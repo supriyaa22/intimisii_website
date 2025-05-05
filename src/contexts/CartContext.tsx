@@ -104,6 +104,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       // Calculate total again to ensure accuracy
       const calculatedTotal = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
       
+      console.log(`Proceeding to checkout with ${items.length} items and total: ${calculatedTotal.toFixed(2)}`);
+      
       // Call our Supabase edge function to create a Stripe checkout session
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         body: { 
