@@ -101,7 +101,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const { data: { user } } = await supabase.auth.getUser();
       const email = user?.email;
 
-      // Calculate total again to ensure accuracy
+      // Calculate total to ensure accuracy
       const calculatedTotal = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
       
       console.log(`Proceeding to checkout with ${items.length} items and total: ${calculatedTotal.toFixed(2)}`);
@@ -121,6 +121,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       
       // Redirect to Stripe checkout
       if (data.url) {
+        // Add the total amount as a URL parameter to use on success page
+        const successUrl = new URL(data.url);
+        const searchParams = new URLSearchParams(successUrl.search);
+        
+        // Store the total in localStorage as a backup
+        localStorage.setItem('last_order_total', calculatedTotal.toString());
+        
         window.location.href = data.url;
       } else {
         throw new Error('No checkout URL returned');
