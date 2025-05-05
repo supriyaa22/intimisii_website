@@ -26,11 +26,110 @@ serve(async (req) => {
     const { items, total, email } = await req.json();
     console.log(`Checkout requested for ${items.length} items, total: ${total}, email: ${email || 'guest'}`);
 
+    // Create a Supabase client using the service role key to bypass RLS
+    const supabaseAdmin = createClient(
+      Deno.env.get("SUPABASE_URL") || "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "",
+      {
+        auth: {
+          persistSession: false,
+        },
+      }
+    );
+
+    // Check if we have user authentication
+    let userId = null;
+    if (req.headers.has("Authorization")) {
+      const authHeader = req.headers.get("Authorization");
+      if (authHeader && authHeader.startsWith("Bearer ")) {
+        const token = authHeader.replace("Bearer ", "");
+        const { data: userData } = await supabaseAdmin.auth.getUser(token);
+        if (userData?.user) {
+          userId = userData.user.id;
+          console.log(`Authenticated user: ${userId}`);
+        }
+      }
+    }
+
+    // Check if a Stripe customer already exists for this user or email
+    let customerId = null;
+    
+    // First try to find by email
+    if (email) {
+      const customers = await stripe.customers.list({ 
+        email: email,
+        limit: 1 
+      });
+      
+      if (customers.data.length > 0) {
+        customerId = customers.data[0].id;
+        console.log(`Found existing Stripe customer by email: ${customerId}`);
+      }
+    }
+    
+    // If no customer found by email and we have a userId, check if we have a mapping in our database
+    if (!customerId && userId) {
+      const { data: userRecord } = await supabaseAdmin
+        .from('users')
+        .select('stripe_customer_id')
+        .eq('id', userId)
+        .maybeSingle();
+      
+      if (userRecord?.stripe_customer_id) {
+        customerId = userRecord.stripe_customer_id;
+        console.log(`Found existing Stripe customer from user record: ${customerId}`);
+      }
+    }
+    
+    // If still no customer, create a new one
+    if (!customerId && email) {
+      const customerData = {
+        email: email,
+        metadata: { 
+          supabase_user_id: userId 
+        }
+      };
+      
+      const newCustomer = await stripe.customers.create(customerData);
+      customerId = newCustomer.id;
+      console.log(`Created new Stripe customer: ${customerId}`);
+      
+      // If we have a userId, update our database with the mapping
+      if (userId) {
+        // Check if the user exists in our users table
+        const { data: existingUser } = await supabaseAdmin
+          .from('users')
+          .select('id')
+          .eq('id', userId)
+          .maybeSingle();
+        
+        if (existingUser) {
+          // Update the existing user with the Stripe customer ID
+          await supabaseAdmin
+            .from('users')
+            .update({ stripe_customer_id: customerId })
+            .eq('id', userId);
+        } else {
+          // Insert a new user record with the Stripe customer ID
+          await supabaseAdmin
+            .from('users')
+            .insert({
+              id: userId,
+              email: email,
+              stripe_customer_id: customerId
+            });
+        }
+        console.log(`Updated user record with Stripe customer ID`);
+      }
+    }
+
     // Get the origin for success/cancel URLs
     const origin = req.headers.get("origin") || "http://localhost:5173";
     
     // Create a Stripe checkout session
     const session = await stripe.checkout.sessions.create({
+      customer: customerId,
+      customer_email: !customerId && email ? email : undefined,
       payment_method_types: ["card"],
       line_items: items.map((item: any) => {
         // If the product has a Stripe product ID, use it
@@ -61,10 +160,10 @@ serve(async (req) => {
       mode: "payment",
       success_url: `${origin}/payment-success?session_id={CHECKOUT_SESSION_ID}&total=${total}`,
       cancel_url: `${origin}/payment-cancelled`,
-      customer_email: email || undefined,
       metadata: {
         order_total: total.toString(),
         customer_email: email || '',
+        user_id: userId || '',
         items_count: items.length.toString(),
         items_json: JSON.stringify(items.map((item: any) => ({
           id: item.product.id,

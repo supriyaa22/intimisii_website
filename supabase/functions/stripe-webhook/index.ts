@@ -72,28 +72,63 @@ serve(async (req) => {
       // Get user information from session metadata
       const customerId = session.customer;
       const customerEmail = session.customer_details?.email || session.metadata?.customer_email || '';
+      const userId = session.metadata?.user_id || null;
       const totalAmount = parseFloat(session.metadata?.order_total || '0');
       
-      // Fetch or create user ID
-      let userId = null;
+      // Determine the final user ID for the order
+      let finalUserId = userId;
       
-      // If we have an email, try to find the user or use anonymous
-      if (customerEmail) {
+      if (!finalUserId && customerId) {
+        // Try to find user by Stripe customer ID
         const { data: userData } = await supabaseAdmin
-          .from('auth.users')
+          .from('users')
+          .select('id')
+          .eq('stripe_customer_id', customerId)
+          .maybeSingle();
+        
+        if (userData) {
+          finalUserId = userData.id;
+          console.log(`Found user ID from stripe_customer_id: ${finalUserId}`);
+        }
+      }
+      
+      if (!finalUserId && customerEmail) {
+        // Try to find user by email
+        const { data: userData } = await supabaseAdmin
+          .from('users')
           .select('id')
           .eq('email', customerEmail)
-          .single();
+          .maybeSingle();
         
-        userId = userData?.id;
-        console.log(`Found user ID: ${userId}`);
+        if (userData) {
+          finalUserId = userData.id;
+          console.log(`Found user ID from email: ${finalUserId}`);
+        } else {
+          // Look for the user in auth.users
+          const { data: authUser } = await supabaseAdmin.auth.admin.listUsers({
+            filter: {
+              email: customerEmail
+            }
+          });
+          
+          if (authUser && authUser.users && authUser.users.length > 0) {
+            finalUserId = authUser.users[0].id;
+            console.log(`Found auth user ID: ${finalUserId}`);
+          }
+        }
+      }
+      
+      // If we still don't have a user ID, create a guest user ID
+      if (!finalUserId) {
+        finalUserId = crypto.randomUUID();
+        console.log(`Created guest user ID: ${finalUserId} for email: ${customerEmail}`);
       }
       
       // Create order record
       const { data: orderData, error: orderError } = await supabaseAdmin
         .from('orders')
         .insert({
-          user_id: userId,
+          user_id: finalUserId,
           stripe_session_id: session.id,
           total_amount: totalAmount,
         })
@@ -129,6 +164,37 @@ serve(async (req) => {
         }
         
         console.log(`Created ${orderItems.length} order items`);
+      }
+      
+      // If this was a successful checkout and we have a customerId but no user mapping,
+      // create or update the user record with the Stripe customer ID for future orders
+      if (customerId && customerEmail && !userId) {
+        const { data: existingUser } = await supabaseAdmin
+          .from('users')
+          .select('id, stripe_customer_id')
+          .eq('email', customerEmail)
+          .maybeSingle();
+        
+        if (existingUser) {
+          // Only update if the stripe_customer_id isn't already set
+          if (!existingUser.stripe_customer_id) {
+            await supabaseAdmin
+              .from('users')
+              .update({ stripe_customer_id: customerId })
+              .eq('id', existingUser.id);
+            console.log(`Updated existing user with Stripe customer ID: ${existingUser.id}`);
+          }
+        } else {
+          // Create new user entry with the Stripe customer ID
+          await supabaseAdmin
+            .from('users')
+            .insert({
+              id: finalUserId,
+              email: customerEmail,
+              stripe_customer_id: customerId
+            });
+          console.log(`Created new user with Stripe customer ID: ${finalUserId}`);
+        }
       }
     }
 
