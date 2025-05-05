@@ -90,17 +90,25 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   // Function to proceed to checkout with Stripe
   const proceedToCheckout = async () => {
     try {
+      // Prevent multiple checkout attempts
+      if (isProcessingPayment || items.length === 0) {
+        return;
+      }
+      
       setIsProcessingPayment(true);
       
       // Get user email if logged in
       const { data: { user } } = await supabase.auth.getUser();
       const email = user?.email;
+
+      // Calculate total again to ensure accuracy
+      const calculatedTotal = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
       
       // Call our Supabase edge function to create a Stripe checkout session
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         body: { 
           items, 
-          total,
+          total: calculatedTotal,
           email 
         }
       });

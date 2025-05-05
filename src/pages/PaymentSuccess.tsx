@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -12,14 +12,18 @@ const PaymentSuccess = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get('session_id');
+  const orderTotal = searchParams.get('order_total');
   const { items, clearCart } = useCart();
   const { toast } = useToast();
+  const [orderProcessed, setOrderProcessed] = useState(false);
 
   useEffect(() => {
-    // Clear cart items after successful payment
-    if (sessionId) {
+    // Only process the order once and only if we have a valid session ID
+    if (sessionId && !orderProcessed && items.length > 0) {
       const saveOrderToDatabase = async () => {
         try {
+          setOrderProcessed(true); // Mark as processed immediately to prevent duplicate calls
+          
           // Get current user
           const { data: { user } } = await supabase.auth.getUser();
           
@@ -29,8 +33,31 @@ const PaymentSuccess = () => {
             return;
           }
           
-          // Calculate total from cart items
-          const total = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+          // Use the total passed from the URL, or calculate from cart items if not available
+          const total = orderTotal 
+            ? parseFloat(orderTotal)
+            : items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+          
+          // Check if an order with this session ID already exists
+          const { data: existingOrder } = await supabase
+            .from('orders')
+            .select('id')
+            .eq('stripe_session_id', sessionId)
+            .single();
+            
+          if (existingOrder) {
+            console.log('Order already exists for this session:', existingOrder.id);
+            
+            // Show success toast
+            toast({
+              title: "Order Successful",
+              description: "Thank you for your purchase! Your order has been successfully processed.",
+              variant: "default",
+            });
+            
+            clearCart();
+            return;
+          }
           
           // Create order record
           const { data: orderData, error: orderError } = await supabase
@@ -39,6 +66,7 @@ const PaymentSuccess = () => {
               { 
                 user_id: user.id,
                 total_amount: total,
+                stripe_session_id: sessionId
               }
             ])
             .select()
@@ -87,7 +115,7 @@ const PaymentSuccess = () => {
       
       saveOrderToDatabase();
     }
-  }, [sessionId, clearCart, toast, items]);
+  }, [sessionId, clearCart, toast, items, orderProcessed, orderTotal]);
 
   return (
     <div className="min-h-screen flex flex-col">

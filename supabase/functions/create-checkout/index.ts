@@ -23,6 +23,12 @@ serve(async (req) => {
     // Parse request body for order details
     const { items, total, email } = await req.json();
 
+    // Calculate total to ensure it's correct (double-check frontend calculation)
+    const calculatedTotal = items.reduce(
+      (sum: number, item: any) => sum + (item.product.price * item.quantity), 
+      0
+    );
+
     // Create a Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -53,18 +59,22 @@ serve(async (req) => {
         }
       }),
       mode: "payment",
-      success_url: `${req.headers.get("origin")}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${req.headers.get("origin")}/payment-success?session_id={CHECKOUT_SESSION_ID}&order_total=${calculatedTotal}`,
       cancel_url: `${req.headers.get("origin")}/payment-cancelled`,
       customer_email: email || undefined,
       metadata: {
-        order_total: total,
+        order_total: calculatedTotal,
         customer_email: email || '',
         items_count: items.length
       },
     });
 
     // Return the session ID and URL to the client
-    return new Response(JSON.stringify({ id: session.id, url: session.url }), {
+    return new Response(JSON.stringify({ 
+      id: session.id, 
+      url: session.url,
+      order_total: calculatedTotal // Send the calculated total back to client
+    }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
