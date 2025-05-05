@@ -7,8 +7,6 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const DOMAIN = "https://lovable-ecommerce-intimisii.vercel.app";
-
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -24,6 +22,10 @@ serve(async (req) => {
 
     console.log(`Creating checkout session for ${email || 'guest'} with ${items.length} items`);
     console.log(`Total amount: ${total.toFixed(2)}`);
+
+    // Get domain from request origin or referer header
+    const origin = req.headers.get("origin") || req.headers.get("referer")?.split(/[?#]/)[0] || "https://lovable-ecommerce-intimisii.vercel.app";
+    console.log(`Using origin: ${origin}`);
 
     // Format line items for Stripe
     const lineItems = items.map(item => ({
@@ -43,8 +45,8 @@ serve(async (req) => {
       customer_email: email,
       line_items: lineItems,
       mode: 'payment',
-      success_url: `${DOMAIN}/payment-success?session_id={CHECKOUT_SESSION_ID}&order_total=${total.toFixed(2)}`,
-      cancel_url: `${DOMAIN}/payment-cancelled`,
+      success_url: `${origin}/payment-success?session_id={CHECKOUT_SESSION_ID}&order_total=${total.toFixed(2)}`,
+      cancel_url: `${origin}/payment-cancelled`,
     });
 
     console.log(`Checkout session created with ID: ${session.id}\n`);
