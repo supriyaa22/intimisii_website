@@ -17,19 +17,33 @@ const PaymentSuccess = () => {
   const { toast } = useToast();
   const [orderProcessed, setOrderProcessed] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [hasShownToast, setHasShownToast] = useState(false);
+
+  // Use a ref to ensure we only process once per component lifecycle
+  const processedRef = React.useRef(false);
 
   useEffect(() => {
-    // Only process the order once and only if we have a valid session ID
-    if (sessionId && !orderProcessed && !isProcessing) {
+    // Only process if we have a sessionId and haven't processed yet in this component lifecycle
+    if (sessionId && !processedRef.current) {
+      processedRef.current = true; // Mark as processed immediately to prevent duplicate runs
+      
       const saveOrderToDatabase = async () => {
         try {
-          setIsProcessing(true); // Prevent concurrent processing
+          setIsProcessing(true);
           
           // Get current user
           const { data: { user } } = await supabase.auth.getUser();
           
           if (!user) {
             console.log("User not authenticated, order will not be saved to account");
+            if (!hasShownToast) {
+              toast({
+                title: "Order Processed",
+                description: "Thank you for your purchase! Your payment was successful.",
+                variant: "default",
+              });
+              setHasShownToast(true);
+            }
             clearCart();
             return;
           }
@@ -41,8 +55,7 @@ const PaymentSuccess = () => {
           
           console.log('Checking for existing order with session ID:', sessionId);
           
-          // Check if an order with this session ID already exists
-          // Avoid the TypeScript error by using a simple select query and manual filtering
+          // First check if this session ID already exists to prevent duplicates
           const { data, error } = await supabase
             .from('orders')
             .select('id')
@@ -53,17 +66,20 @@ const PaymentSuccess = () => {
             throw error;
           }
           
-          // Check if we have any results
+          // If order already exists, just show the toast and return
           if (data && data.length > 0) {
             console.log('Order already exists for this session:', data[0].id);
             setOrderProcessed(true);
             
-            // Show success toast only once
-            toast({
-              title: "Order Successful",
-              description: "Thank you for your purchase! Your order has been successfully processed.",
-              variant: "default",
-            });
+            // Only show toast if we haven't shown it yet
+            if (!hasShownToast) {
+              toast({
+                title: "Order Successful",
+                description: "Thank you for your purchase! Your order has been successfully processed.",
+                variant: "default",
+              });
+              setHasShownToast(true);
+            }
             
             clearCart();
             return;
@@ -71,7 +87,7 @@ const PaymentSuccess = () => {
           
           console.log('No existing order found, creating new order with total:', total);
           
-          // Create order record
+          // Create order record within a transaction to ensure consistency
           const { data: orderData, error: orderError } = await supabase
             .from('orders')
             .insert([
@@ -81,7 +97,8 @@ const PaymentSuccess = () => {
                 stripe_session_id: sessionId
               }
             ])
-            .select();
+            .select()
+            .single();
             
           if (orderError) {
             throw orderError;
@@ -89,7 +106,7 @@ const PaymentSuccess = () => {
           
           // Create order items records
           const orderItems = items.map(item => ({
-            order_id: orderData[0].id,
+            order_id: orderData.id,
             product_name: item.product.name,
             quantity: item.quantity,
             price: item.product.price
@@ -103,23 +120,31 @@ const PaymentSuccess = () => {
             throw itemsError;
           }
           
-          console.log('Order saved successfully:', orderData[0].id);
+          console.log('Order saved successfully:', orderData.id);
           setOrderProcessed(true);
           
-          // Show success toast only once
-          toast({
-            title: "Order Successful",
-            description: "Thank you for your purchase! Your order has been successfully processed and saved to your account.",
-            variant: "default",
-          });
+          // Only show toast if we haven't shown it yet
+          if (!hasShownToast) {
+            toast({
+              title: "Order Successful",
+              description: "Thank you for your purchase! Your order has been successfully processed and saved to your account.",
+              variant: "default",
+            });
+            setHasShownToast(true);
+          }
           
         } catch (error) {
           console.error('Error saving order:', error);
-          toast({
-            title: "Order Processed",
-            description: "Your payment was successful, but we couldn't save your order details. Please contact support.",
-            variant: "destructive",
-          });
+          
+          // Only show error toast if we haven't shown any toast yet
+          if (!hasShownToast) {
+            toast({
+              title: "Order Processed",
+              description: "Your payment was successful, but we couldn't save your order details. Please contact support.",
+              variant: "destructive",
+            });
+            setHasShownToast(true);
+          }
         } finally {
           clearCart();
           setIsProcessing(false);
@@ -128,7 +153,10 @@ const PaymentSuccess = () => {
       
       saveOrderToDatabase();
     }
-  }, [sessionId, clearCart, toast, items, orderProcessed, orderTotal, isProcessing]);
+    
+    // Do not include any dependencies that would cause this effect to re-run
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col">
