@@ -42,11 +42,18 @@ const PaymentSuccess = () => {
           console.log('Checking for existing order with session ID:', sessionId);
           
           // Check if an order with this session ID already exists
-          const { data: existingOrder } = await supabase
+          // Fix the TypeScript error by using a more explicit approach to the query
+          const { data: existingOrders, error: checkError } = await supabase
             .from('orders')
             .select('id')
-            .eq('stripe_session_id', sessionId)
-            .maybeSingle();
+            .eq('stripe_session_id', sessionId);
+            
+          if (checkError) {
+            console.error('Error checking for existing order:', checkError);
+            throw checkError;
+          }
+          
+          const existingOrder = existingOrders && existingOrders.length > 0 ? existingOrders[0] : null;
             
           if (existingOrder) {
             console.log('Order already exists for this session:', existingOrder.id);
