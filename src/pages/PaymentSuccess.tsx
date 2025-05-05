@@ -42,21 +42,20 @@ const PaymentSuccess = () => {
           console.log('Checking for existing order with session ID:', sessionId);
           
           // Check if an order with this session ID already exists
-          // Fix the TypeScript error by using a more explicit approach to the query
-          const { data: existingOrders, error: checkError } = await supabase
+          // Avoid the TypeScript error by using a simple select query and manual filtering
+          const { data, error } = await supabase
             .from('orders')
             .select('id')
             .eq('stripe_session_id', sessionId);
             
-          if (checkError) {
-            console.error('Error checking for existing order:', checkError);
-            throw checkError;
+          if (error) {
+            console.error('Error checking for existing order:', error);
+            throw error;
           }
           
-          const existingOrder = existingOrders && existingOrders.length > 0 ? existingOrders[0] : null;
-            
-          if (existingOrder) {
-            console.log('Order already exists for this session:', existingOrder.id);
+          // Check if we have any results
+          if (data && data.length > 0) {
+            console.log('Order already exists for this session:', data[0].id);
             setOrderProcessed(true);
             
             // Show success toast only once
@@ -82,8 +81,7 @@ const PaymentSuccess = () => {
                 stripe_session_id: sessionId
               }
             ])
-            .select()
-            .single();
+            .select();
             
           if (orderError) {
             throw orderError;
@@ -91,7 +89,7 @@ const PaymentSuccess = () => {
           
           // Create order items records
           const orderItems = items.map(item => ({
-            order_id: orderData.id,
+            order_id: orderData[0].id,
             product_name: item.product.name,
             quantity: item.quantity,
             price: item.product.price
@@ -105,7 +103,7 @@ const PaymentSuccess = () => {
             throw itemsError;
           }
           
-          console.log('Order saved successfully:', orderData.id);
+          console.log('Order saved successfully:', orderData[0].id);
           setOrderProcessed(true);
           
           // Show success toast only once
