@@ -7,6 +7,9 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Use the provided Stripe secret key
+const STRIPE_SECRET_KEY = "sk_test_51RK5NcR0Phz7rb8GXX90gnzuuey70mU5ibLmFRAPggTJB8dcMYwSn1PY66NNZtXWojCX7tU391R4lZIfT12Ek1Yc00ox3ggBMY";
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -16,7 +19,7 @@ serve(async (req) => {
   try {
     const { items, total, email } = await req.json();
     
-    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
+    const stripe = new Stripe(STRIPE_SECRET_KEY, {
       apiVersion: "2023-10-16",
     });
 
