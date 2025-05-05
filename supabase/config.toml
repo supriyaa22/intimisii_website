@@ -1,5 +1,5 @@
 
-# reference: https://supabase.com/docs/guides/functions/config
+# reference: https://supabase.com/docs/guides/functions
 project_id = "tcuqadixigejuglcgeae"
 
 [functions.create-checkout]
