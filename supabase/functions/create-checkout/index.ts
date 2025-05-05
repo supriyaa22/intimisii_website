@@ -27,7 +27,14 @@ serve(async (req) => {
     console.log(`Total amount: ${total.toFixed(2)}`);
 
     // Get domain from request origin or referer header
-    const origin = req.headers.get("origin") || req.headers.get("referer")?.split(/[?#]/)[0] || "https://intimisii.lovable.app";
+    let origin = req.headers.get("origin") || req.headers.get("referer");
+    if (origin) {
+      // Extract just the origin part (protocol + hostname)
+      const url = new URL(origin);
+      origin = `${url.protocol}//${url.host}`;
+    } else {
+      origin = "https://intimisii.lovable.app"; // Fallback domain
+    }
     console.log(`Using origin: ${origin}`);
 
     // Format line items for Stripe

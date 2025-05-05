@@ -121,13 +121,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       
       // Redirect to Stripe checkout
       if (data.url) {
-        // Add the total amount as a URL parameter to use on success page
-        const successUrl = new URL(data.url);
-        const searchParams = new URLSearchParams(successUrl.search);
-        
         // Store the total in localStorage as a backup
         localStorage.setItem('last_order_total', calculatedTotal.toString());
         
+        // Redirect to the Stripe checkout page
         window.location.href = data.url;
       } else {
         throw new Error('No checkout URL returned');
