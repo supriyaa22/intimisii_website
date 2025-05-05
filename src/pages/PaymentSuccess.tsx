@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { ShoppingBag, CheckCircle2, ExternalLink } from 'lucide-react';
+import { ShoppingBag, CheckCircle2 } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { useToast } from '../hooks/use-toast';
 import { supabase } from '../integrations/supabase/client';
@@ -43,7 +43,7 @@ const PaymentSuccess = () => {
             .from('orders')
             .select('id')
             .eq('stripe_session_id', sessionId)
-            .single();
+            .maybeSingle();
             
           if (existingOrder) {
             console.log('Order already exists for this session:', existingOrder.id);

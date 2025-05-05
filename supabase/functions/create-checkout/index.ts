@@ -59,11 +59,11 @@ serve(async (req) => {
         }
       }),
       mode: "payment",
-      success_url: `${req.headers.get("origin")}/payment-success?session_id={CHECKOUT_SESSION_ID}&order_total=${calculatedTotal}`,
+      success_url: `${req.headers.get("origin")}/payment-success?session_id={CHECKOUT_SESSION_ID}&order_total=${calculatedTotal.toFixed(2)}`,
       cancel_url: `${req.headers.get("origin")}/payment-cancelled`,
       customer_email: email || undefined,
       metadata: {
-        order_total: calculatedTotal,
+        order_total: calculatedTotal.toFixed(2),
         customer_email: email || '',
         items_count: items.length
       },
