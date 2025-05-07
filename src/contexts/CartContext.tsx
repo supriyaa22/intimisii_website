@@ -73,7 +73,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const clearCart = () => setItems([]);
 
   const total = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
-  const savings = items.reduce((sum, item) => sum + 50, 0); // Example savings calculation
   
   // Calculate total quantity of all items for free shipping logic (not unique products)
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
@@ -83,6 +82,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   // Fixed shipping cost that will be saved when free shipping is eligible
   const shippingCost = 12.99;
   const shippingSavings = freeShippingEligible ? shippingCost : 0;
+  
+  // Set savings to be the shipping savings (12.99 when eligible, 0 when not)
+  const savings = shippingSavings;
   
   // Dynamic free shipping message based on quantity
   let freeShippingMessage = "";
