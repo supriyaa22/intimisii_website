@@ -22,6 +22,8 @@ interface CartContextType {
   totalItems: number;
   freeShippingEligible: boolean;
   freeShippingMessage: string;
+  shippingCost: number;
+  shippingSavings: number;
   proceedToCheckout: () => Promise<void>;
   isProcessingPayment: boolean;
   clearCart: () => void;
@@ -73,18 +75,22 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const total = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
   const savings = items.reduce((sum, item) => sum + 50, 0); // Example savings calculation
   
-  // Calculate total items for free shipping logic based on unique products (not quantity)
-  const totalItems = items.length;
-  const FREE_SHIPPING_THRESHOLD = 2; // Number of unique products needed for free shipping
+  // Calculate total quantity of all items for free shipping logic (not unique products)
+  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+  const FREE_SHIPPING_THRESHOLD = 2; // Number of items needed for free shipping
   const freeShippingEligible = totalItems >= FREE_SHIPPING_THRESHOLD;
   
-  // Dynamic free shipping message based on unique products
+  // Fixed shipping cost that will be saved when free shipping is eligible
+  const shippingCost = 12.99;
+  const shippingSavings = freeShippingEligible ? shippingCost : 0;
+  
+  // Dynamic free shipping message based on quantity
   let freeShippingMessage = "";
   if (freeShippingEligible) {
     freeShippingMessage = "You have unlocked FREE SHIPPING!";
   } else {
     const itemsNeeded = FREE_SHIPPING_THRESHOLD - totalItems;
-    freeShippingMessage = `Add ${itemsNeeded} more product${itemsNeeded > 1 ? 's' : ''} to get FREE SHIPPING.`;
+    freeShippingMessage = `Add ${itemsNeeded} more item${itemsNeeded > 1 ? 's' : ''} to get FREE SHIPPING.`;
   }
 
   // Function to proceed to checkout with Stripe
@@ -141,6 +147,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       totalItems,
       freeShippingEligible,
       freeShippingMessage,
+      shippingCost,
+      shippingSavings,
       proceedToCheckout,
       isProcessingPayment,
       clearCart,

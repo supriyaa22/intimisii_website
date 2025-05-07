@@ -18,6 +18,7 @@ export function Cart() {
     freeShippingEligible, 
     freeShippingMessage,
     totalItems,
+    shippingSavings,
     proceedToCheckout,
     isProcessingPayment
   } = useCart();
@@ -41,6 +42,11 @@ export function Cart() {
               {freeShippingMessage}
             </p>
             <Progress value={progress} className="h-2 bg-gray-200" />
+            {freeShippingEligible && (
+              <p className="text-sm text-green-700 font-medium">
+                You saved $12.99 on shipping!
+              </p>
+            )}
           </div>
         </SheetHeader>
 
