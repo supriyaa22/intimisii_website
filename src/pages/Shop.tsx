@@ -13,7 +13,7 @@ const products: Product[] = [
     id: 1,
     name: "Adiva Amorè Signature Collection",
     price: 199,
-    image: "/lovable-uploads/1de72dba-2442-49d2-b545-de17ac8094c6.png",
+    image: "/lovable-uploads/e6637287-0c92-47e2-92ac-a8895830910c.png",
     description: "This fragrance composition is thoughtfully crafted, beginning with the uplifting blend of gardenia and lemon peel, transitioning into the complex floral heart of tuberose, jasmine, and green florals.",
     details: "Intimisii's opulent parfum candle, meticulously crafted by our perfumer whose expertise was cultivated in Grasse, France.",
     badges: [

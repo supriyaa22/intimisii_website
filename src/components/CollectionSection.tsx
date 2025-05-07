@@ -10,7 +10,7 @@ const CollectionSection = () => {
       id: 1,
       name: "Adiva Amorè Signature Collection",
       price: 199,
-      image: "/lovable-uploads/cff2b946-86c8-4495-8d0f-1b24df9821aa.png",
+      image: "/lovable-uploads/e6637287-0c92-47e2-92ac-a8895830910c.png",
       description: "Intimisii's opulent parfum candle, meticulously crafted by our perfumer whose expertise was cultivated in Grasse, France.",
       details: "Intricately composed using coconut wax and an exquisite fusion of fragrance and essential oils. Free from parabens, paraffin, phthalates, sulfates, synthetic dyes, and formaldehyde.",
       badges: [
