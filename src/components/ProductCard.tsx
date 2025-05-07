@@ -1,3 +1,4 @@
+
 import { Product, Badge } from "../types";
 import { useCart } from "../contexts/CartContext";
 
@@ -22,7 +23,7 @@ const ProductCard = ({ product, imageOnRight = false, isFeatured = false }: Prod
   };
 
   const contentSection = (
-    <div className={`bg-black ${isFeatured ? 'border border-gold' : 'border border-gold/30'} p-12 flex flex-col justify-between`}>
+    <div className={`bg-black p-12 flex flex-col justify-between`}>
       <div>
         {isFeatured ? (
           <h3 className="font-serif text-3xl mb-4">
