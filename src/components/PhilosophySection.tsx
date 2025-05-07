@@ -1,9 +1,6 @@
-
 import { Link } from "react-router-dom";
-
 const PhilosophySection = () => {
-  return (
-    <section className="bg-darkbg py-16">
+  return <section className="bg-darkbg py-16">
       <div className="container mx-auto px-4">
         <div className="border-t border-stone-700 pt-12"></div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -13,12 +10,7 @@ const PhilosophySection = () => {
               A Symphony of{" "}
               <span className="text-gold">Elegance & Refinement</span>
             </h2>
-            <p className="text-gray-300 leading-relaxed">
-              At Intimisii, we believe in creating more than just candles—we curate sensory
-              journeys that transform spaces and elevate moments. Each product embodies
-              our commitment to Luxury Curation, sustainable practices,
-              and uncompromising quality.
-            </p>
+            <p className="text-gray-300 leading-relaxed">At Intimisii, we believe in creating more than just candles—we curate sensory journeys that transform spaces and elevate moments. Each product embodies our commitment to Luxury Curation, sustainable practices, and uncompromising quality.</p>
             <p className="text-gray-300 leading-relaxed">
               Our collections are an invitation to experience luxury in its most authentic
               form a harmonious blend of sophisticated fragrances, elegant design, and
@@ -26,26 +18,17 @@ const PhilosophySection = () => {
               impression on the senses.
             </p>
             <div className="mt-8">
-              <Link 
-                to="/about"
-                className="inline-block px-8 py-3 bg-transparent border border-stone-700 hover:border-gold text-white hover:text-gold transition duration-200"
-              >
+              <Link to="/about" className="inline-block px-8 py-3 bg-transparent border border-stone-700 hover:border-gold text-white hover:text-gold transition duration-200">
                 Discover Our Story
               </Link>
             </div>
           </div>
           <div className="border border-gold p-1">
-            <img 
-              src="/lovable-uploads/cb0c1ce0-947e-458b-ac60-94b4d2ce5dd6.png" 
-              alt="Intimisii luxury candle with white gardenia flower and lemon peel" 
-              className="w-full h-auto"
-            />
+            <img src="/lovable-uploads/cb0c1ce0-947e-458b-ac60-94b4d2ce5dd6.png" alt="Intimisii luxury candle with white gardenia flower and lemon peel" className="w-full h-auto" />
           </div>
         </div>
         <div className="border-b border-stone-700 pb-12 mt-12"></div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default PhilosophySection;
