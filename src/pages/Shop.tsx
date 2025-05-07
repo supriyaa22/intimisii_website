@@ -43,7 +43,7 @@ const products: Product[] = [
     description: "Intimisii's Massage Spa Candles offer a harmonious blend of luxury and functionality, transforming any space into a serene sanctuary while providing exceptional skin benefits.",
     details: "A passionate ode to the art of indulgence, crafting a sensory journey of pure, unadulterated luxury.",
     badges: [
-      { label: "ADIVA Signature Bougié Massage Spa Candle", variant: "feature" },
+      { label: "Massage Candle", variant: "feature" },
       { label: "Eco Conscious", variant: "eco" }
     ],
     stripeProductId: ""
@@ -62,7 +62,7 @@ const Shop = () => {
     ? products 
     : activeCategory === "signature" 
       ? products.filter(p => p.badges.some(b => b.label === "Signature Collection"))
-      : products.filter(p => p.badges.some(b => b.label === "ADIVA Signature Bougié Massage Spa Candle"));
+      : products.filter(p => p.badges.some(b => b.label === "Massage Candle"));
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -116,15 +116,17 @@ const Shop = () => {
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredProducts.map((product) => (
-                <Card key={product.id} className="bg-black border border-stone-800 overflow-hidden">
+                <Card key={product.id} className="bg-black border border-stone-800 overflow-hidden flex flex-col">
                   <div className="relative">
-                    <img 
-                      src={product.image} 
-                      alt={product.name} 
-                      className="w-full h-80 object-cover"
-                    />
+                    <div className="h-[400px] overflow-hidden"> {/* Increased height for taller product images */}
+                      <img 
+                        src={product.image} 
+                        alt={product.name} 
+                        className="w-full h-full object-contain" /* Changed to contain to show full image without cropping */
+                      />
+                    </div>
                     
-                    {/* Product badge */}
+                    {/* Product badge - only showing badges, removed duplicate product name */}
                     <div className="absolute bottom-2 left-2 flex flex-wrap gap-2">
                       {product.badges.map((badge, index) => (
                         <span 
@@ -143,23 +145,19 @@ const Shop = () => {
                     </div>
                   </div>
                   
-                  <CardContent className="p-6">
+                  <CardContent className="p-6 flex flex-col flex-grow">
                     <h3 className="font-serif text-xl mb-2 text-white">{product.name}</h3>
                     <p className="text-gold text-xl mb-4">${product.price}</p>
-                    <p className="text-white/80 mb-6 text-sm text-justify">{product.description}</p>
+                    <p className="text-white/80 mb-6 text-sm text-justify flex-grow">{product.description}</p>
                     
-                    <div className="grid grid-cols-2 gap-4">
-                      <button 
-                        onClick={() => addItem(product)}
-                        className="flex items-center justify-center px-4 py-2 bg-[#3A1B1F] text-white border border-stone-700 rounded-sm hover:bg-[#4A2B2F] transition-colors"
-                      >
-                        <ShoppingBag size={16} className="mr-2" />
-                        Add to Cart
-                      </button>
-                      <button className="px-4 py-2 bg-transparent text-white border border-[#D5B36A] rounded-sm hover:bg-[#D5B36A]/10 transition-colors">
-                        View Details
-                      </button>
-                    </div>
+                    {/* Single button layout - removed View Details button */}
+                    <button 
+                      onClick={() => addItem(product)}
+                      className="flex items-center justify-center px-4 py-3 bg-[#3A1B1F] text-white border border-stone-700 rounded-sm hover:bg-[#4A2B2F] transition-colors w-full"
+                    >
+                      <ShoppingBag size={16} className="mr-2" />
+                      Add to Cart
+                    </button>
                   </CardContent>
                 </Card>
               ))}
