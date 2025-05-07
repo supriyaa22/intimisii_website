@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -58,7 +59,7 @@ const About = () => {
               <div className="border border-[#C9A96E] p-4">
                 <div className="bg-black p-3">
                   <img 
-                    src="/lovable-uploads/d9d814d3-17a5-4ce0-9138-eac6c7524535.png" 
+                    src="/lovable-uploads/596412ef-aa40-4b66-9823-1bd5f8c50fcc.png" 
                     alt="Intimisii Luxury Candle" 
                     className="w-full h-auto"
                   />
