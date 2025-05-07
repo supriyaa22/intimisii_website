@@ -26,7 +26,7 @@ const CollectionSection = () => {
       id: 2,
       name: "Adiva Noir Signature Collection",
       price: 199,
-      image: "/lovable-uploads/060ed3eb-e7e8-4ee7-95a9-28eb00269043.png",
+      image: "/lovable-uploads/7be80d11-f178-4c0e-b49f-c833e2c896d4.png",
       description: "A testament to the artistry of fragrance, offering an olfactory masterpiece characterized by unrivaled diffusion of scent.",
       details: "Harness the potent essences of coconut wax with intricately blended perfume fragrances and essential oils. Our sustainable packaging materials resonate with eco-conscious values.",
       badges: [
